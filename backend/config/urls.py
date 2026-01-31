@@ -18,9 +18,11 @@ from django.contrib import admin
 from django.urls import path
 from django.conf.urls.static import static
 from config import settings as setting
+from core.views import criterios_evaluation
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path("api/evaluation/criterios/", criterios_evaluation),
 ]
 
 urlpatterns += static(
