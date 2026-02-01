@@ -19,10 +19,29 @@ from django.urls import path
 from django.conf.urls.static import static
 from config import settings as setting
 from core.views import criterios_evaluation
+from django.urls import path, include
+from django.http import JsonResponse
+from core.views import login_view, logout_view
+
+def home(_request):
+    return JsonResponse({
+        "ok": True,
+        "message": "Backend activo",
+        "endpoints": [
+            "/api/evaluation/criterios/",
+            "/api/profile/me/",
+            "/api/profile/me/evidences/",
+        ]
+    })
 
 urlpatterns = [
+    path("", home),
     path('admin/', admin.site.urls),
     path("api/evaluation/criterios/", criterios_evaluation),
+    # Solicitante
+    path("api/profile/", include("apps.profiles.urls")),
+    path("api/auth/login/", login_view),
+    path("api/auth/logout/", logout_view),
 ]
 
 urlpatterns += static(
