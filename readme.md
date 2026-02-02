@@ -112,7 +112,29 @@ Almacena los documentos subidos por los profesores y generados por el sistema, t
 
 --- 
 
-## Instalación y configuración del backend
+## Ejecución con Docker (Recomendado)
+
+Esta es la forma más sencilla de ejecutar tanto el backend como el frontend, asegurando un entorno reproducible.
+
+### Requisitos previos
+- [Docker](https://www.docker.com/get-started)
+- Docker Compose (usualmente incluido en Docker Desktop)
+
+### Pasos
+1. Abre una terminal en la raíz del proyecto.
+2. Ejecuta el siguiente comando para construir y levantar los servicios:
+
+   ```bash
+   docker compose up --build
+   ```
+
+3. Accede a las aplicaciones:
+   - **Frontend**: http://localhost:5173
+   - **Backend**: http://localhost:8000
+
+---
+
+## Instalación y configuración del backend (Manual)
 
 1. Clonar el repositorio:
 
