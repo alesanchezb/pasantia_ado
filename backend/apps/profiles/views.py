@@ -1,112 +1,121 @@
-import json
-from django.http import JsonResponse
-from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.models import User
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.parsers import MultiPartParser, FormParser
+from rest_framework import status
+from rest_framework_simplejwt.tokens import RefreshToken
 
-from .models import Profile, Evidence
-
-
-def _require_auth(request):
-    if not request.user.is_authenticated:
-        return JsonResponse({"detail": "Authentication required"}, status=401)
-    return None
+from ..services import ProfileService, EvidenceService
+from .serializers import ProfileSerializer, EvidenceSerializer
 
 
-def _get_or_create_profile(user):
-    profile, _ = Profile.objects.get_or_create(user=user)
-    return profile
+class ProfileMeView(APIView):
+    """
+    Handles retrieving and updating the profile for the logged-in user.
+    """
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        profile = ProfileService.get_or_create_profile(request.user)
+        serializer = ProfileSerializer(profile)
+        return Response(serializer.data)
+
+    def put(self, request):
+        profile = ProfileService.get_or_create_profile(request.user)
+        serializer = ProfileSerializer(instance=profile, data=request.data, partial=True)
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
 
 
-def _profile_to_dict(p: Profile):
-    return {
-        "id": p.id,
-        "user_id": p.user_id,
-        "role": p.role,
-        "full_name": p.full_name,
-        "phone": p.phone,
-        "department": p.department,
-        "summary": p.summary,
-        "updated_at": p.updated_at.isoformat() if p.updated_at else None,
-    }
+class EvidenceView(APIView):
+    """
+    Handles listing and creating evidences for the logged-in user.
+    """
+    permission_classes = [IsAuthenticated]
+    parser_classes = [MultiPartParser, FormParser]  # For file uploads
+
+    def get(self, request):
+        profile = ProfileService.get_or_create_profile(request.user)
+        evidences = EvidenceService.get_evidences_for_profile(profile)
+        serializer = EvidenceSerializer(evidences, many=True, context={'request': request})
+        return Response(serializer.data)
+
+    def post(self, request):
+        profile = ProfileService.get_or_create_profile(request.user)
+
+        # The serializer validates 'name', 'kind', and 'file'
+        # We pass the request context to build the absolute file URL on response
+        serializer = EvidenceSerializer(data=request.data, context={'request': request})
+        serializer.is_valid(raise_exception=True)
+
+        # We use the service to perform the creation
+        # The serializer's 'validated_data' contains the required fields
+        new_evidence = EvidenceService.create_evidence(
+            profile=profile, **serializer.validated_data
+        )
+
+        # We serialize the created object to return it, including the new file_url
+        result_serializer = EvidenceSerializer(new_evidence, context={'request': request})
+        return Response(result_serializer.data, status=status.HTTP_201_CREATED)
 
 
-@require_http_methods(["GET", "PUT", "PATCH"])
-@csrf_exempt
-def profile_me(request):
-    auth = _require_auth(request)
-    if auth:
-        return auth
+class EvidenceDetailView(APIView):
+    """
+    Handles deleting a specific evidence.
+    """
+    permission_classes = [IsAuthenticated]
 
-    profile = _get_or_create_profile(request.user)
+    def delete(self, request, evidence_id: int):
+        profile = ProfileService.get_or_create_profile(request.user)
 
-    if request.method == "GET":
-        return JsonResponse(_profile_to_dict(profile), safe=False)
+        was_deleted = EvidenceService.delete_evidence(
+            profile=profile, evidence_id=evidence_id
+        )
 
-    # PUT/PATCH
-    try:
-        payload = json.loads(request.body.decode("utf-8") or "{}")
-    except Exception:
-        return JsonResponse({"detail": "Invalid JSON body"}, status=400)
-
-    for field in ["full_name", "phone", "department", "summary"]:
-        if field in payload:
-            setattr(profile, field, payload[field] or "")
-
-    profile.save()
-    return JsonResponse(_profile_to_dict(profile), safe=False)
+        if was_deleted:
+            return Response(status=status.HTTP_204_NO_CONTENT)
+        
+        return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
 
 
-def _evidence_to_dict(e: Evidence, request):
-    file_url = e.file.url if e.file else None
-    return {
-        "id": e.id,
-        "name": e.name,
-        "kind": e.kind,
-        "file_url": file_url,
-        "created_at": e.created_at.isoformat() if e.created_at else None,
-    }
+class DevelopmentLoginView(APIView):
+    """
+    Development-only endpoint to quickly log in or create a user.
+    Accepts a POST request with "username" and "role" ('applicant' or 'evaluator').
+    Returns JWT access and refresh tokens.
+    """
+    permission_classes = []  # No permissions needed to log in
 
+    def post(self, request):
+        username = request.data.get("username")
+        role = request.data.get("role")
 
-@require_http_methods(["GET", "POST"])
-@csrf_exempt
-def evidences_me(request):
-    auth = _require_auth(request)
-    if auth:
-        return auth
+        if not username:
+            return Response({"detail": "Username is required."}, status=status.HTTP_400_BAD_REQUEST)
 
-    profile = _get_or_create_profile(request.user)
+        if role not in ['applicant', 'evaluator']:
+            return Response({"detail": "Role must be 'applicant' or 'evaluator'."}, status=status.HTTP_400_BAD_REQUEST)
 
-    if request.method == "GET":
-        evidences = Evidence.objects.filter(profile=profile).order_by("-created_at")
-        return JsonResponse([_evidence_to_dict(e, request) for e in evidences], safe=False)
+        # Get or create the user
+        user, _ = User.objects.get_or_create(username=username)
 
-    upload = request.FILES.get("file")
-    name = request.POST.get("name") or (upload.name if upload else None)
-    kind = request.POST.get("kind") or ""
+        # Get or create the profile and set the role
+        profile = ProfileService.get_or_create_profile(user)
+        if profile.role != role:
+            profile.role = role
+            profile.save()
 
-    if not upload:
-        return JsonResponse({"detail": "Missing file"}, status=400)
-    if not name:
-        return JsonResponse({"detail": "Missing name"}, status=400)
+        # Generate tokens
+        refresh = RefreshToken.for_user(user)
 
-    e = Evidence.objects.create(profile=profile, name=name, kind=kind, file=upload)
-    return JsonResponse(_evidence_to_dict(e, request), status=201)
-
-
-@require_http_methods(["DELETE"])
-@csrf_exempt
-def evidence_delete(request, evidence_id: int):
-    auth = _require_auth(request)
-    if auth:
-        return auth
-
-    profile = _get_or_create_profile(request.user)
-
-    try:
-        e = Evidence.objects.get(id=evidence_id, profile=profile)
-    except Evidence.DoesNotExist:
-        return JsonResponse({"detail": "Not found"}, status=404)
-
-    e.file.delete(save=False)
-    e.delete()
-    return JsonResponse({"ok": True})
+        return Response({
+            'refresh': str(refresh),
+            'access': str(refresh.access_token),
+            'user': {
+                'id': user.id,
+                'username': user.username,
+                'role': profile.role,
+            }
+        })

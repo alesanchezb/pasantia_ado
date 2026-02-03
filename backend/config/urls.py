@@ -39,7 +39,7 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/evaluation/criterios/", criterios_evaluation),
     # Solicitante
-    path("api/profile/", include("apps.profiles.urls")),
+    path("api/profiles/", include("apps.profiles.urls")),
     path("api/auth/login/", login_view),
     path("api/auth/logout/", logout_view),
 ]

@@ -1,39 +1,91 @@
 import React, { useState, useMemo } from 'react';
 
-// Títulos de columnas
+// --- MOCK DATA PARA EVIDENCIAS ---
+const MOCK_APPLICANT_EVIDENCES = {
+  "grado_licenciatura": [
+    { id: 101, name: "Titulo_Licenciatura_UNISON.pdf", url: "#", source: "PORTAL", reviewed_by: "Dr. Roberto", reviewed_at: "2023-11-01" }
+  ],
+  "experiencia_docencia": [
+    { id: 102, name: "Constancia_Semestre_2022_2.pdf", url: "#", source: "UPLOAD", reviewed_by: "Dra. Ana L.", reviewed_at: "2023-11-02" },
+    { id: 103, name: "Constancia_Semestre_2023_1.pdf", url: "#", source: "UPLOAD", reviewed_by: null, reviewed_at: null }
+  ]
+};
+
 const SECTION_HEADERS = {
   "I.":  { A: "En Matemáticas", B: "En Área Afín", C: "-" },
   "DEFAULT": { A: "Área Concurso", B: "Otras Matemáticas", C: "Otras Afines" }
 };
 
+// ==========================================
+// COMPONENTE: VISOR DE EVIDENCIAS
+// ==========================================
+const EvidenceViewer = ({ evidenceKind }) => {
+  if (!evidenceKind) return null;
+  const files = MOCK_APPLICANT_EVIDENCES[evidenceKind] || [];
+  if (files.length === 0) return null;
+
+  return (
+    <div className="mt-3 space-y-2 max-w-sm">
+      {files.map(file => {
+        const isReviewed = Boolean(file.reviewed_by);
+        const isPortal = file.source === "PORTAL";
+
+        return (
+          <div key={file.id} className="flex flex-col sm:flex-row sm:items-center justify-between p-2.5 bg-white border border-slate-200 rounded-lg shadow-sm">
+            <div className="flex items-center gap-2 truncate pr-2">
+              <span title={isPortal ? "Documento del Portal" : "Subido por usuario"} className="text-base leading-none">
+                {isPortal ? "🏛️" : "☁️"} 
+              </span>
+              <a href={file.url} target="_blank" rel="noreferrer" className="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline truncate">
+                {file.name}
+              </a>
+            </div>
+            <div className="mt-2 sm:mt-0 flex items-center justify-end">
+              {isReviewed ? (
+                <div className="flex flex-col text-right">
+                  <span className="text-emerald-600 font-bold text-xs flex items-center justify-end gap-1">
+                    <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                    Revisado
+                  </span>
+                  <span className="text-[10px] text-slate-400 font-medium">por {file.reviewed_by}</span>
+                </div>
+              ) : (
+                <button className="bg-amber-100 text-amber-700 hover:bg-amber-200 px-2.5 py-1 rounded text-xs font-bold transition-colors">
+                  Validar
+                </button>
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+};;
+
+
+// ==========================================
+// COMPONENTE PRINCIPAL DE EVALUACIÓN
+// ==========================================
 export default function EvaluationView({ evaluationData }) {
   const [valores, setValores] = useState({});
 
-  // --- LOGICA MODIFICADA PARA DESELECCIONAR ---
   const handleRadioClick = (sectionId, item, selectedKey) => {
     const uniqueKey = `${sectionId}_${item.id}_${selectedKey}`;
     const estaSeleccionado = valores[uniqueKey] === 1;
-
     const nuevos = { ...valores };
-
-    // 1. Primero reseteamos TODA la fila a 0 (para limpiar cualquier selección previa)
-    item.inputs.forEach(inp => { 
-        nuevos[`${sectionId}_${item.id}_${inp.key}`] = 0; 
-    });
-
-    // 2. Si NO estaba seleccionado, lo seleccionamos (1).
-    //    Si YA estaba seleccionado, no hacemos nada (se queda en 0 por el paso 1), logrando el efecto de deselección.
-    if (!estaSeleccionado) {
-        nuevos[uniqueKey] = 1;
-    }
-
+    item.inputs.forEach(inp => { nuevos[`${sectionId}_${item.id}_${inp.key}`] = 0; });
+    if (!estaSeleccionado) nuevos[uniqueKey] = 1;
     setValores(nuevos);
   };
 
-  // Cálculos
+  const handleNumberChange = (sectionId, item, selectedKey, value) => {
+    const uniqueKey = `${sectionId}_${item.id}_${selectedKey}`;
+    const intValue = parseInt(value, 10);
+    setValores(prev => ({ ...prev, [uniqueKey]: !isNaN(intValue) && intValue >= 0 ? intValue : 0 }));
+  };
+
   const seccionesCalculadas = useMemo(() => {
     if (!evaluationData) return [];
-    
     return evaluationData.map(seccion => {
       let totalSeccion = 0;
       const items = seccion.items.map(item => {
@@ -53,204 +105,200 @@ export default function EvaluationView({ evaluationData }) {
     });
   }, [evaluationData, valores]);
 
-  if (!evaluationData) return <div className="p-10 text-center font-bold text-gray-500">Cargando evaluación...</div>;
+
+  const InputCell = ({ item, columnKey, uniqueGroupName, sectionId, color }) => {
+    const inputMap = item.inputsMap[columnKey];
+    const bgClass = color === 'blue' ? 'bg-blue-50/10' : color === 'yellow' ? 'bg-amber-50/20' : 'bg-orange-50/20';
+    const accentClass = color === 'blue' ? 'accent-blue-600' : color === 'yellow' ? 'accent-amber-500' : 'accent-orange-500';
+
+    if (!inputMap) return <td className={`text-center border-r border-slate-100 ${bgClass}`}><span className="text-slate-200">-</span></td>;
+
+    if (item.input_type === 'number') {
+      return (
+        <td className={`text-center border-r border-slate-100 p-2 align-middle ${bgClass}`}>
+          <input type="number" min="0" value={inputMap.cantidad || ''} 
+            onChange={(e) => handleNumberChange(sectionId, item, columnKey, e.target.value)}
+            className="w-16 text-center py-1.5 border border-slate-300 rounded focus:border-blue-500 font-bold shadow-sm" placeholder="0" />
+        </td>
+      );
+    }
+    return (
+      <td className={`text-center border-r border-slate-100 align-middle ${bgClass}`}>
+        <div className="flex justify-center items-center h-full py-2">
+          <input type="radio" name={uniqueGroupName} checked={inputMap.cantidad === 1} 
+            onClick={() => handleRadioClick(sectionId, item, columnKey)} readOnly 
+            className={`w-5 h-5 cursor-pointer hover:scale-110 transition-transform ${accentClass}`} />
+        </div>
+      </td>
+    );
+  };
+
+  if (!evaluationData) return (
+    <div className="min-h-screen flex items-center justify-center bg-slate-50">
+        <div className="animate-pulse text-slate-400 font-medium">Cargando evaluación...</div>
+    </div>
+  );
 
   return (
-    <div className="bg-gray-100 min-h-screen py-10 px-4 sm:px-6 lg:px-8 font-sans">
+    <div className="bg-slate-50 min-h-screen font-sans pb-32">
       
-      {/* HEADER PRINCIPAL */}
-      <div className="max-w-7xl mx-auto mb-10 text-center">
-        <h1 className="text-4xl font-extrabold text-gray-800 tracking-tight mb-2">Evaluación Curricular</h1>
-        <p className="text-gray-500">Complete los rubros seleccionando la opción correspondiente. Puede hacer clic nuevamente para desmarcar.</p>
+      <div className="bg-white border-b border-slate-200 sticky top-0 z-40 shadow-sm">
+          <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+            <div>
+              <h1 className="text-2xl font-bold text-slate-800">Evaluación Curricular</h1>
+              <p className="text-slate-500 text-sm mt-1">Universidad de Sonora • Campus Hermosillo</p>
+            </div>
+          </div>
       </div>
 
-      <div className="max-w-7xl mx-auto space-y-10">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         
-        {seccionesCalculadas.map((seccion) => {
-          const headers = SECTION_HEADERS[seccion.id] || SECTION_HEADERS["DEFAULT"];
-          const tieneB = seccion.items.some(i => i.inputsMap && i.inputsMap['col_B']);
-          const tieneC = seccion.items.some(i => i.inputsMap && i.inputsMap['col_C']);
+        <div className="mb-10 bg-white p-6 rounded-xl shadow-md border border-slate-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 relative overflow-hidden">
+          <div className="absolute top-0 left-0 w-2 h-full bg-blue-600"></div>
+          <div>
+            <span className="text-xs font-bold text-slate-400 uppercase tracking-widest block mb-1">Postulante a Evaluar</span>
+            <h2 className="text-xl font-black text-slate-800">Postulante 1</h2>
+            <p className="text-sm font-medium text-slate-500">Departamento de Matemáticas</p>
+          </div>
+          <div className="flex items-center gap-2 px-4 py-2 bg-slate-50 border border-slate-200 rounded-lg">
+            <span className="text-xs text-slate-400 font-bold uppercase">Evaluador:</span>
+            <span className="text-sm font-bold text-slate-700">Dr. Adrian</span>
+          </div>
+        </div>
 
-          return (
-            <div key={seccion.id} className="bg-white rounded-xl shadow-lg border border-gray-200 overflow-hidden">
-              
-              {/* ENCABEZADO DE TARJETA */}
-              <div className="bg-gray-50 px-6 py-5 border-b border-gray-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
-                <div>
-                   <span className="block text-xs font-bold text-blue-600 uppercase tracking-wider mb-1">
-                     Sección {seccion.id}
-                   </span>
-                   <h2 className="text-xl font-bold text-gray-800">{seccion.titulo}</h2>
-                </div>
+        <div className="space-y-8">
+          {seccionesCalculadas.map((seccion) => {
+            const headers = SECTION_HEADERS[seccion.id] || SECTION_HEADERS["DEFAULT"];
+            const tieneB = seccion.items.some(i => i.inputsMap && i.inputsMap['col_B']);
+            const tieneC = seccion.items.some(i => i.inputsMap && i.inputsMap['col_C']);
+
+            return (
+              <div key={seccion.id} className="bg-white rounded-xl shadow-md border border-slate-200 overflow-hidden transition-shadow hover:shadow-lg">
                 
-                <div className={`flex items-center px-4 py-2 rounded-lg border ${
-                    seccion.excede ? 'bg-red-50 border-red-200 text-red-700' : 'bg-green-50 border-green-200 text-green-700'
-                }`}>
-                   <div className="text-right">
-                      <span className="block text-2xl font-bold leading-none">{seccion.totalSeccion.toFixed(2)}</span>
-                      <span className="text-[10px] font-bold uppercase opacity-70">Max: {seccion.max_puntos} pts</span>
-                   </div>
+                <div className="bg-slate-50 px-6 py-4 border-b border-slate-200 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                  <div>
+                      <span className="text-xs font-extrabold text-blue-600 uppercase tracking-widest block mb-1">Sección {seccion.id}</span>
+                      <h2 className="text-lg font-bold text-slate-800">{seccion.titulo}</h2>
+                  </div>
+                  <div className={`flex items-center gap-2 px-4 py-2 rounded-lg border ${seccion.excede ? 'bg-red-50 border-red-200 text-red-700' : 'bg-emerald-50 border-emerald-200 text-emerald-700'}`}>
+                    <span className="text-2xl font-bold leading-none">{seccion.totalSeccion.toFixed(2)}</span>
+                    <div className="flex flex-col text-[10px] font-bold uppercase leading-tight opacity-70">
+                      <span>pts</span><span>/ {seccion.max_puntos} max</span>
+                    </div>
+                  </div>
                 </div>
-              </div>
 
-              {/* TABLA */}
-              <div className="overflow-x-auto">
-                <table className="w-full min-w-[800px]">
-                  <thead>
-                    <tr className="bg-gray-100 text-xs font-bold text-gray-500 uppercase tracking-wider border-b border-gray-200">
-                      <th className="px-6 py-4 text-left w-[40%]">Concepto</th>
-                      
-                      {/* Cabecera A */}
-                      <th className="w-20 text-center bg-blue-100 text-blue-800 border-l border-white">Valor</th>
-                      <th className="w-24 text-center bg-blue-50 text-blue-800 border-r border-gray-200">{headers.A}</th>
+                <div className="overflow-x-auto">
+                  <table className="w-full min-w-[950px]">
+                    <thead>
+                      <tr className="text-xs uppercase tracking-wider font-semibold text-slate-500 border-b border-slate-200">
+                        <th className="px-6 py-4 text-left bg-slate-50 w-[45%]">Concepto y Evidencias</th>
+                        <th className="w-16 text-center bg-blue-50/60 border-l border-slate-200 text-blue-600">Valor</th>
+                        <th className="w-24 text-center bg-blue-50 text-blue-800 border-r border-slate-200">{headers.A}</th>
+                        {tieneB && <>
+                          <th className="w-16 text-center bg-amber-50/60 text-amber-600">Valor</th>
+                          <th className="w-24 text-center bg-amber-50 text-amber-800 border-r border-slate-200">{headers.B}</th>
+                        </>}
+                        {tieneC && <>
+                          <th className="w-16 text-center bg-orange-50/60 text-orange-600">Valor</th>
+                          <th className="w-24 text-center bg-orange-50 text-orange-800 border-r border-slate-200">{headers.C}</th>
+                        </>}
+                        <th className="px-6 py-4 text-right bg-slate-50 w-32">Total</th>
+                      </tr>
+                    </thead>
+                    
+                    <tbody className="divide-y divide-slate-100">
+                      {seccion.items.map((item, idx) => {
+                        if (item.tipo === "subtitulo") {
+                          return (
+                            <tr key={idx} className="bg-slate-100/80">
+                              <td colSpan="10" className="px-6 py-3">
+                                <span className="text-xs font-bold text-slate-600 uppercase tracking-wide">
+                                  {item.id} {item.concepto}
+                                </span>
+                                {/* AHORA TAMBIÉN RENDERIZAMOS EVIDENCIAS AQUÍ */}
+                                {item.evidence_kind && (
+                                  <div className="mt-1">
+                                    <EvidenceViewer evidenceKind={item.evidence_kind} />
+                                  </div>
+                                )}
+                              </td>
+                            </tr>
+                          );
+                        };
 
-                      {/* Cabecera B */}
-                      {tieneB && <>
-                        <th className="w-20 text-center bg-yellow-100 text-yellow-800 border-l border-white">Valor</th>
-                        <th className="w-24 text-center bg-yellow-50 text-yellow-800 border-r border-gray-200">{headers.B}</th>
-                      </>}
+                        const uniqueGroup = `radio_${seccion.id}_${idx}`;
 
-                      {/* Cabecera C */}
-                      {tieneC && <>
-                        <th className="w-20 text-center bg-orange-100 text-orange-800 border-l border-white">Valor</th>
-                        <th className="w-24 text-center bg-orange-50 text-orange-800 border-r border-gray-200">{headers.C}</th>
-                      </>}
+                        // --- CORRECCIÓN 1: LÓGICA PARA OCULTAR "autoid_" ---
+                        const esIdReal = item.tipo === "item" && !item.id.startsWith("autoid_");
 
-                      <th className="px-6 py-4 text-right bg-gray-50 text-gray-700">Total</th>
-                    </tr>
-                  </thead>
-                  
-                  <tbody className="divide-y divide-gray-100">
-                    {seccion.items.map((item, idx) => {
-                      
-                      if (item.tipo === "subtitulo") {
                         return (
-                          <tr key={idx} className="bg-gray-50">
-                            <td colSpan="10" className="px-6 py-3 text-xs font-bold text-gray-500 uppercase tracking-wide">
-                                {item.id} {item.concepto}
+                          <tr key={idx} className="group hover:bg-slate-50 transition-colors duration-150">
+                            
+                            <td className="px-6 py-4 align-top">
+                              <div className={`flex flex-col ${item.tipo === "subitem" ? "pl-4 border-l-2 border-slate-300" : ""}`}>
+                                 {/* CORRECCIÓN 1: Solo renderiza el ID si es real */}
+                                 {esIdReal && <span className="text-[10px] font-bold text-slate-400 mb-0.5">{item.id}</span>}
+                                 
+                                 <span className="text-sm font-medium text-slate-700 leading-snug">{item.concepto}</span>
+                                 
+                                 {item.evidence_kind && (
+                                    <EvidenceViewer evidenceKind={item.evidence_kind} />
+                                 )}
+                              </div>
+                            </td>
+
+                            <td className="text-center font-mono text-xs text-slate-400 bg-blue-50/5 border-l border-slate-100 align-middle">{item.inputsMap['col_A']?.valor_unitario || '-'}</td>
+                            <InputCell item={item} columnKey="col_A" uniqueGroupName={uniqueGroup} sectionId={seccion.id} color="blue" />
+                            
+                            {tieneB && <>
+                              <td className="text-center font-mono text-xs text-slate-400 bg-amber-50/5 align-middle">{item.inputsMap['col_B']?.valor_unitario || '-'}</td>
+                              <InputCell item={item} columnKey="col_B" uniqueGroupName={uniqueGroup} sectionId={seccion.id} color="yellow" />
+                            </>}
+                            
+                            {tieneC && <>
+                              <td className="text-center font-mono text-xs text-slate-400 bg-orange-50/5 align-middle">{item.inputsMap['col_C']?.valor_unitario || '-'}</td>
+                              <InputCell item={item} columnKey="col_C" uniqueGroupName={uniqueGroup} sectionId={seccion.id} color="orange" />
+                            </>}
+
+                            <td className="px-6 py-4 text-right align-middle">
+                               <span className={`text-sm font-bold ${item.totalItem > 0 ? 'text-blue-700' : 'text-slate-300'}`}>
+                                  {item.totalItem > 0 ? item.totalItem.toFixed(2) : '-'}
+                               </span>
                             </td>
                           </tr>
                         );
-                      }
-
-                      const uniqueGroupName = `radio_group_${seccion.id}_row_${idx}`;
-
-                      return (
-                        <tr key={idx} className="hover:bg-blue-50 transition-colors duration-150 group">
-                          
-                          {/* Columna Concepto */}
-                          <td className="px-6 py-4">
-                            <div className={`flex flex-col ${item.tipo === "subitem" ? "pl-4 border-l-2 border-gray-300" : ""}`}>
-                               {item.tipo === "item" && (
-                                 <span className="text-[10px] font-bold text-gray-400 mb-1">{item.id}</span>
-                               )}
-                               <span className="text-sm font-medium text-gray-700 group-hover:text-gray-900">
-                                   {item.concepto}
-                               </span>
-                            </div>
-                          </td>
-
-                          {/* --- Columna A --- */}
-                          <td className="text-center bg-gray-50/50 border-l border-gray-100">
-                              <span className="text-xs font-mono font-bold text-gray-400">
-                                  {item.inputsMap['col_A']?.valor_unitario || '-'}
-                              </span>
-                          </td>
-                          <td className="text-center border-r border-gray-100 relative">
-                            {item.inputsMap['col_A'] ? (
-                                <div className="flex justify-center items-center h-full py-2">
-                                  <input 
-                                    type="radio" 
-                                    name={uniqueGroupName}
-                                    checked={item.inputsMap['col_A'].cantidad === 1}
-                                    // CAMBIO IMPORTANTE: onClick en lugar de onChange para detectar clicks repetidos
-                                    onClick={() => handleRadioClick(seccion.id, item, 'col_A')}
-                                    readOnly // Evita warning de React ya que controlamos con onClick
-                                    className="w-5 h-5 cursor-pointer accent-blue-600" 
-                                  />
-                                </div>
-                            ) : <span className="text-gray-200">-</span>}
-                          </td>
-
-                          {/* --- Columna B --- */}
-                          {tieneB && <>
-                            <td className="text-center bg-gray-50/50 border-l border-gray-100">
-                                <span className="text-xs font-mono font-bold text-gray-400">
-                                    {item.inputsMap['col_B']?.valor_unitario || '-'}
-                                </span>
-                            </td>
-                            <td className="text-center border-r border-gray-100">
-                              {item.inputsMap['col_B'] ? (
-                                  <div className="flex justify-center items-center h-full py-2">
-                                    <input 
-                                      type="radio" 
-                                      name={uniqueGroupName}
-                                      checked={item.inputsMap['col_B'].cantidad === 1}
-                                      onClick={() => handleRadioClick(seccion.id, item, 'col_B')}
-                                      readOnly
-                                      className="w-5 h-5 cursor-pointer accent-yellow-600" 
-                                    />
-                                  </div>
-                              ) : <span className="text-gray-200">-</span>}
-                            </td>
-                          </>}
-
-                          {/* --- Columna C --- */}
-                          {tieneC && <>
-                            <td className="text-center bg-gray-50/50 border-l border-gray-100">
-                                <span className="text-xs font-mono font-bold text-gray-400">
-                                    {item.inputsMap['col_C']?.valor_unitario || '-'}
-                                </span>
-                            </td>
-                            <td className="text-center border-r border-gray-100">
-                              {item.inputsMap['col_C'] ? (
-                                  <div className="flex justify-center items-center h-full py-2">
-                                    <input 
-                                      type="radio" 
-                                      name={uniqueGroupName}
-                                      checked={item.inputsMap['col_C'].cantidad === 1}
-                                      onClick={() => handleRadioClick(seccion.id, item, 'col_C')}
-                                      readOnly
-                                      className="w-5 h-5 cursor-pointer accent-orange-600" 
-                                    />
-                                  </div>
-                              ) : <span className="text-gray-200">-</span>}
-                            </td>
-                          </>}
-
-                          {/* Total Fila */}
-                          <td className="px-6 py-4 text-right bg-gray-50/30">
-                             <span className={`text-sm font-bold ${item.totalItem > 0 ? 'text-blue-600' : 'text-gray-300'}`}>
-                                {item.totalItem > 0 ? item.totalItem.toFixed(2) : '-'}
-                             </span>
-                          </td>
-                        </tr>
-                      );
-                    })}
-                  </tbody>
-                </table>
+                      })}
+                    </tbody>
+                  </table>
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
 
-      {/* FOOTER TOTAL */}
-      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200 p-4 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] z-50">
-          <div className="max-w-7xl mx-auto flex justify-between items-center">
-             <div className="text-xs text-gray-400 hidden sm:block">
-                * Verifique no exceder los topes establecidos en cada sección.
+      {/* --- CORRECCIÓN 2 y 3: FOOTER MEJORADO Y TOTAL VISIBLE --- */}
+      <div className="fixed bottom-0 left-0 right-0 bg-white border-t border-slate-200 shadow-[0_-5px_15px_rgba(0,0,0,0.05)] z-[100]">
+          <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col sm:flex-row justify-between items-center gap-4">
+             <div className="text-xs text-slate-500 hidden md:block">
+                * Revisa que los subtotales no excedan el límite de cada sección.
              </div>
-             <div className="flex items-center gap-4">
-                 <span className="text-xs font-bold text-gray-400 uppercase tracking-widest">Total General</span>
-                 <span className="text-3xl font-black text-gray-800">
-                    {seccionesCalculadas.reduce((acc, sec) => acc + Math.min(sec.totalSeccion, sec.max_puntos), 0).toFixed(2)}
-                 </span>
+             
+             <div className="flex items-center gap-6">
+                 <div className="text-right">
+                    <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Puntuación Total</div>
+                    {/* CORRECCIÓN 2: Texto de color sólido (blue-700) para asegurar que se vea */}
+                    <div className="text-3xl font-black text-blue-700 leading-none">
+                        {seccionesCalculadas.reduce((acc, sec) => acc + Math.min(sec.totalSeccion, sec.max_puntos), 0).toFixed(2)}
+                    </div>
+                 </div>
+                 <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg shadow-blue-600/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
+                    Finalizar Evaluación
+                 </button>
              </div>
           </div>
       </div>
-      
-      <div className="h-20"></div>
     </div>
   );
 }
