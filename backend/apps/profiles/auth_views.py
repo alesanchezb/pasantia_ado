@@ -4,10 +4,10 @@ from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
 from django.contrib.auth import authenticate, login, logout
 from django.middleware.csrf import get_token
+from django.contrib.auth.models import User
 
 @require_http_methods(["GET"])
 def csrf(request):
-    # fuerza a que exista csrftoken
     return JsonResponse({"csrftoken": get_token(request)})
 
 @require_http_methods(["POST"])
@@ -28,11 +28,7 @@ def api_logout(request):
     logout(request)
     return JsonResponse({"detail": "ok"})
 
-from django.contrib.auth.models import User
-from django.views.decorators.csrf import csrf_exempt
-
 @require_http_methods(["POST"])
-@csrf_exempt
 def api_register(request):
     data = json.loads(request.body.decode("utf-8") or "{}")
     username = (data.get("username") or "").strip()
@@ -45,6 +41,5 @@ def api_register(request):
         return JsonResponse({"detail": "Ese usuario ya existe"}, status=400)
 
     user = User.objects.create_user(username=username, password=password)
-    login(request, user)  # opcional: lo deja logueado al registrarse
+    login(request, user)  # opcional: te loguea al registrarte
     return JsonResponse({"detail": "ok"})
-
