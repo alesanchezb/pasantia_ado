@@ -1,4 +1,4 @@
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api";
+const API_BASE = "";
 
 function getCookie(name) {
   const m = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
@@ -15,7 +15,7 @@ async function request(path, options = {}) {
     headers["Content-Type"] = "application/json";
   }
 
-  // Si usas SessionAuth de Django/DRF, los métodos “unsafe” necesitan CSRF
+  // CSRF para métodos unsafe
   if (["POST", "PUT", "PATCH", "DELETE"].includes(method)) {
     const csrf = getCookie("csrftoken");
     if (csrf) headers["X-CSRFToken"] = csrf;
@@ -32,20 +32,33 @@ async function request(path, options = {}) {
         : options.body,
   });
 
+  // 🔴 AQUÍ VA EL BLOQUE
+  if (res.status === 401) {
+    if (window.location.pathname !== "/login") {
+      window.location.href = "/login";
+    }
+    throw new Error("API 401: Unauthorized");
+  }
+
   if (!res.ok) {
     const text = await res.text().catch(() => "");
     throw new Error(`API ${res.status}: ${text || "error"}`);
   }
 
   if (res.status === 204) return null;
+
   const ct = res.headers.get("content-type") || "";
   if (!ct.includes("application/json")) return null;
+
   return res.json();
 }
 
 export const apiGet = (path) => request(path);
-export const apiPutJson = (path, body) => request(path, { method: "PUT", body });
-export const apiPostJson = (path, body) => request(path, { method: "POST", body });
+export const apiPutJson = (path, body) =>
+  request(path, { method: "PUT", body });
+export const apiPostJson = (path, body) =>
+  request(path, { method: "POST", body });
 export const apiPostForm = (path, formData) =>
   request(path, { method: "POST", body: formData });
-export const apiDelete = (path) => request(path, { method: "DELETE" });
+export const apiDelete = (path) =>
+  request(path, { method: "DELETE" });

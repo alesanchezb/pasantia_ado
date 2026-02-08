@@ -9,4 +9,6 @@ urlpatterns = [
     path("profile/me/", views.profile_me),
     path("profile/me/evidences/", views.evidences_me),
     path("profile/me/evidences/<int:evidence_id>/", views.evidence_delete),
+    path("auth/register/", auth_views.api_register),
+
 ]

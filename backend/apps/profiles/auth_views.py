@@ -27,3 +27,24 @@ def api_login(request):
 def api_logout(request):
     logout(request)
     return JsonResponse({"detail": "ok"})
+
+from django.contrib.auth.models import User
+from django.views.decorators.csrf import csrf_exempt
+
+@require_http_methods(["POST"])
+@csrf_exempt
+def api_register(request):
+    data = json.loads(request.body.decode("utf-8") or "{}")
+    username = (data.get("username") or "").strip()
+    password = data.get("password") or ""
+
+    if not username or not password:
+        return JsonResponse({"detail": "username y password son requeridos"}, status=400)
+
+    if User.objects.filter(username=username).exists():
+        return JsonResponse({"detail": "Ese usuario ya existe"}, status=400)
+
+    user = User.objects.create_user(username=username, password=password)
+    login(request, user)  # opcional: lo deja logueado al registrarse
+    return JsonResponse({"detail": "ok"})
+
