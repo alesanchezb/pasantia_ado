@@ -110,3 +110,22 @@ def evidence_delete(request, evidence_id: int):
     e.file.delete(save=False)
     e.delete()
     return JsonResponse({"ok": True})
+
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Profile
+"""
+@login_required
+
+def me(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
+
+    return JsonResponse({
+        "id": profile.id,
+        "full_name": profile.full_name,
+        "phone": profile.phone,
+        "department": profile.department,
+        "summary": profile.summary,
+        "role": profile.role,
+    })
+"""

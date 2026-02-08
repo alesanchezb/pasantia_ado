@@ -34,10 +34,6 @@ ALLOWED_HOSTS = []
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
 
-CORS_ALLOWED_ORIGINS = [
-    "http://localhost:5173",
-]
-
 # Application definition
 
 INSTALLED_APPS = [
@@ -139,3 +135,7 @@ CORS_ALLOW_CREDENTIALS = True
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+
+CSRF_TRUSTED_ORIGINS = [
+    "http://localhost:5173",
+]
