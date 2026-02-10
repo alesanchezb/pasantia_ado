@@ -17,21 +17,28 @@ def criterios_evaluation(request):
     try:
         with open(csv_path, newline="", encoding="utf-8") as f:
             reader = csv.reader(f)
-            
+            next(reader) # Omitir la fila de encabezado
+
             for row in reader:
-                # Normalizamos fila a 10 columnas seguras
-                row = row + [""] * (10 - len(row))
+                # Normalizamos la fila para leer todas las columnas de forma segura
+                row = row + [""] * (14 - len(row))
                 
                 col_id = row[1].strip()
                 col_desc = row[2].strip()
 
-                # --- 1. DETECTAR SECCIÓN ---
+                desc_lower = col_desc.lower()
+                if desc_lower.startswith("subtotal") or \
+                   desc_lower.startswith("sumas parciales") or \
+                   desc_lower.startswith("puntajes máximos") or \
+                   desc_lower.startswith("puntuación total"):
+                    continue
+                
+                # --- 1. DETECTAR SI ES UNA SECCIÓN PRINCIPAL (ej: "I.", "II.") ---
                 if regex_seccion.match(col_id):
-                    max_pts = 0
                     match = regex_max_puntos.search(col_desc)
-                    if match:
-                        max_pts = int(match.group(1))
-
+                    max_pts = int(match.group(1)) if match else 0
+                    
+                    # Creamos la nueva sección y la definimos como la sección activa
                     seccion_actual = {
                         "id": col_id,
                         "titulo": col_desc,
@@ -39,68 +46,68 @@ def criterios_evaluation(request):
                         "items": []
                     }
                     data_estructurada.append(seccion_actual)
-                    ultimo_item_padre = None 
-                    continue
+                    ultimo_item_padre = None
+                    continue # Hemos procesado la fila de sección, pasamos a la siguiente
 
-                if seccion_actual is None: continue
+                # Si llegamos aquí, la fila NO es una sección principal.
+                # Debe ser un item o subtítulo que pertenece a la sección que ya encontramos.
+                if seccion_actual is None:
+                    continue # Ignoramos filas de items que aparezcan antes de la primera sección
 
-                # --- 2. MAPEO INTELIGENTE DE COLUMNAS ---
-                # Aquí está el truco: Definimos qué índice del CSV corresponde a A, B o C
+                # --- 2. PROCESAR LA FILA COMO UN ITEM ---
+                if not col_desc:
+                    continue # Ignoramos filas sin descripción, no son items válidos
+
+                # Mapeo de columnas de inputs (A, B, C)
                 inputs_detectados = []
-                mapa_columnas = []
-
+                mapa_columnas = [(3, "col_A"), (4, "col_B"), (5, "col_C")]
                 if seccion_actual["id"] == "I.":
-                    # Sección I: Los datos están desplazados una columna a la derecha
-                    mapa_columnas = [
-                        (4, "col_A"), # Columna E del Excel -> A
-                        (5, "col_B")  # Columna F del Excel -> B
-                    ]
-                else:
-                    # Resto de secciones: Estándar
-                    mapa_columnas = [
-                        (3, "col_A"), # Columna D -> A
-                        (4, "col_B"), # Columna E -> B
-                        (5, "col_C")  # Columna F -> C
-                    ]
+                    mapa_columnas = [(4, "col_A"), (5, "col_B")]
 
                 for indice_csv, clave_normalizada in mapa_columnas:
                     try:
-                        val_str = row[indice_csv].strip()
-                        val = float(val_str)
+                        val = float(row[indice_csv].strip())
                         if val > 0:
-                            inputs_detectados.append({
-                                "key": clave_normalizada, # Ahora siempre será "col_A", "col_B"...
-                                "valor_unitario": val
-                            })
-                    except ValueError:
+                            inputs_detectados.append({"key": clave_normalizada, "valor_unitario": val})
+                    except (ValueError, IndexError):
                         pass
 
-                # --- 3. CREAR ITEM O SUBITEM ---
-                # Solo agregamos si encontramos descripción
-                if col_desc:
-                    tipo = "item"
-                    final_id = col_id
-
-                    # Lógica para detectar subtítulos (II.A) vs items normales
-                    if col_id and not inputs_detectados:
-                        tipo = "subtitulo"
-                        ultimo_item_padre = col_id
-                    elif not col_id and inputs_detectados:
+                # Determinamos el tipo de item (subtitulo, subitem, o item normal)
+                tipo = "item"
+                final_id = col_id
+                if col_id and not inputs_detectados:
+                    tipo = "subtitulo"
+                    ultimo_item_padre = col_id
+                elif not col_id and inputs_detectados:
+                    if ultimo_item_padre:
                         tipo = "subitem"
                         final_id = f"{ultimo_item_padre}_sub_{len(seccion_actual['items'])}"
+                    else:
+                        tipo = "item"
+                        # ¡AQUÍ ESTÁ LA MAGIA! Si no tiene ID ni padre, le inventamos uno único:
+                        final_id = f"autoid_{len(seccion_actual['items'])}"
+                elif not col_id and inputs_detectados and ultimo_item_padre:
+                    tipo = "subitem"
+                    final_id = f"{ultimo_item_padre}_sub_{len(seccion_actual['items'])}"
 
-                    # Solo agregamos si es relevante (tiene ID o tiene inputs)
-                    if inputs_detectados or tipo == "subtitulo":
-                        item = {
-                            "id": final_id,
-                            "concepto": col_desc,
-                            "inputs": inputs_detectados,
-                            "tipo": tipo
-                        }
-                        seccion_actual["items"].append(item)
+                # Leemos los metadatos de las últimas columnas
+                input_type = "number" if row[12].strip().lower() == "number" else "radio"
+                evidence_kind = row[13].strip() or None
+
+                item = {
+                    "id": final_id,
+                    "concepto": col_desc,
+                    "inputs": inputs_detectados,
+                    "tipo": tipo,
+                    "input_type": input_type,
+                    "evidence_kind": evidence_kind,
+                }
+                
+                # Añadimos el item a la sección actual
+                seccion_actual["items"].append(item)
 
     except Exception as e:
-        return JsonResponse({"error": str(e)}, status=500)
+        return JsonResponse({"error": f"Error procesando el CSV: {str(e)}"}, status=500)
 
     return JsonResponse(data_estructurada, safe=False)
 

@@ -34,21 +34,17 @@ def home(_request):
         ]
     })
 
-""""
 urlpatterns = [
     path("", home),
     path('admin/', admin.site.urls),
     path("api/evaluation/criterios/", criterios_evaluation),
+    path("api/", include("apps.profiles.urls")),
     # Solicitante
-    path("api/profile/", include("apps.profiles.urls")),
+    path("api/profiles/", include("apps.profiles.urls")),
     path("api/auth/login/", login_view),
     path("api/auth/logout/", logout_view),
 ]
-"""
-urlpatterns = [
-    path("admin/", admin.site.urls),
-    path("api/", include("apps.profiles.urls")),
-]
+
 urlpatterns += static(
         setting.MEDIA_URL,
         document_root=setting.MEDIA_ROOT

@@ -36,10 +36,35 @@ def evidence_upload_to(instance, filename: str) -> str:
 
 
 class Evidence(models.Model):
+    # --- NUEVO: Opciones para el origen del documento ---
+    SOURCE_UPLOAD = "UPLOAD"
+    SOURCE_PORTAL = "PORTAL"
+    SOURCE_CHOICES = [
+        (SOURCE_UPLOAD, "Subido por usuario"),
+        (SOURCE_PORTAL, "Documento del portal"),
+    ]
+
     profile = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="evidences")
     name = models.CharField(max_length=255)
     kind = models.CharField(max_length=80, blank=True, default="")  # ej: "titulo", "constancia", etc.
     file = models.FileField(upload_to=evidence_upload_to)
+    
+    source = models.CharField(
+        max_length=20, 
+        choices=SOURCE_CHOICES, 
+        default=SOURCE_UPLOAD
+    )
+
+    # --- NUEVOS CAMPOS PARA ESTADO DE REVISIÓN ---
+    reviewed_by = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL, # Si se borra el evaluador, no se borra la evidencia
+        null=True,
+        blank=True,
+        related_name="reviewed_evidences"
+    )
+    reviewed_at = models.DateTimeField(null=True, blank=True)
+    # --- FIN DE NUEVOS CAMPOS ---
 
     created_at = models.DateTimeField(auto_now_add=True)
 

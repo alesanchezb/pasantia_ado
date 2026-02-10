@@ -1,220 +1,219 @@
-,departamento,Departamento de Matemáticas,,,,,,,,,
-,campus,Campus Hermosillo. Universidad de Sonora,,,,,,,,,
-,titulo,CRITERIOS DE EVALUACIÓN CURRICULAR PARA EL INGRESO DE PERSONAL ACADÉMICO DE ASIGNATURA,,,,,,,,,
-,area,Área de trabajo o asignatura:,,,,,,,,,
-,nombre,Nombre del Concursante:,,,,,,,,,
-,I.,GRADO ACADÉMICO (max. 200 puntos),,,,,,,,,
- ,,,,Puntaje Unitario,,Unidades,,PuntajeTotal,,,
-,,,,,,En matemáticas ,En área afín,,,,
-,,,,A,B,A,B,,,,
-,I.A.,Licenciatura ,,30,0,,,0,,,
-,I.B,Especialización (como posgrado),,45,15,,,0,,,
-,I.C,Maestría,,100,35,,,0,,,
-,I.D,Doctorado,,200,70,,,0,,,
-,,SUBTOTAL,,,,,,0,,,
-,,,,,,,,,,,
-,II.,EXPERIENCIA ACADÉMICA Y PROFESIONAL (max. 150 puntos),,,,,,,,,
-,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,
-,,,,,,En el área de Concurso,Sólo en otras áreas de matemáticas ,Sólo en otras  áreas afines,,,
-,,,,,,,,,A,B,C
-,,,A,B,C,A,B,C,A,B,C
-,II.A.,"Semestre de docencia, investigación o extensión",,,,,,,,,
-,,En instituciones de nivel medio superior ,2.5,1.25,0.625,,,,0,0,0
-,,En instituciones de nivel superior ,5,2.5,1.25,,,,0,0,0
-,II.B.,Seis meses de trabajo profesional,2.5,1.25,0.625,,,,0,0,0
-,,Sumas Parciales ,,,,,,,0,0,0
-,,"Puntajes máximos por columna:  37.5 puntos para columna C, 75 puntos para la suma de B y C",,37.5,37.5,,,,0,0,0
-,,SUBTOTAL,,,,,,,0,,
-,,,,,,,,,,,
-,III.,ANTIGÜEDAD ACADÉMICA EN LA UNIVERSIDAD DE SONORA (max. 50 puntos),,,,,,,,,
-,,,Puntaje Unitario,,Unidades,,,,Puntaje Total,,
-,,,,,En el Departamento de Matemáticas,,Sólo en otros Departamentos de la FICEN o la FI,,,,
-,,,A,B,A,,B,,,,
-,,"Semestre de docencia, investigación o extensión",2,1,,,,,0,,
-,,SUBTOTAL,,,,,,,0,,
-,,,,,,,,,,,
-,IV.,OTRAS ACTIVIDADES DE FORMACIÓN ACADÉMICA (max. 60 puntos),,,,,,,,,
-,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,
-,,,,,,En el área de Concurso,En otras áreas de matemáticas ,En otras áreas afínes,,,
-,,,A,B,C,A,B,C,A,B,C
-,,"Diplomado, curso o taller de actualización didáctica o disciplinaria recibido. (Puntos por hora)",0.05,0.025,0.0125,,,,0,0,0
-,,"Diplomado, cursos y talleres recibidos dentro del Programa Institucional de Desarrollo de Competencias Docentes UNISON. (Puntos por hora)",0.04,0.02,0.01,,,,0,0,0
-,,Cursos curriculares semestrales de nivel maestría (grado inconcluso),2,1,0.5,,,,0,0,0
-,,Cursos curriculares semestrales de nivel doctorado (grado inconcluso),3,1.5,0.75,,,,0,0,0
-,,Sumas Parciales ,,,,,,,0,0,0
-,,"Puntajes máximos por columna:  15 puntos para columna C, 30 puntos para la suma de B y C",,,,,,,0,0,0
-,,SUBTOTAL,,,,,,,0,,
-,,,,,,,,,,,
-,V.,ACTIVIDADES GENERALES DE PRODUCTIVIDAD DOCENTE (max. 200 puntos),,,,,,,,,
-,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,
-,,,,,,En el área de Concurso,En otras áreas de matemáticas ,En otras áreas afínes,,,
-,,,A,B,C,A,B,C,A,B,C
-,V.A.,Diseño de Planes de Estudio en sus diversos grados y modalidades.,,,,,,,,,
-,,Coordinador de la comisión responsable ,4,2,1,,,,0,0,0
-,,Miembro de la comisión responsable. ,3,1.5,0.75,,,,0,0,0
-,,Participante en actividades específicas.,1,0.5,0.25,,,,0,0,0
-,V.B.,Proyecto de Docencia ,1,0.5,0.25,,,,0,,
-,,Responsable,2,1,0.5,,,,0,0,0
-,,Colaborador,1.5,0.75,0.375,,,,0,0,0
-,V.C.,"Elaboración de manuales, notas o material didáctico para un curso curricular completo",,,,,,,,,
-,,Responsable,1,0.5,0.25,,,,0,0,0
-,,Colaborador,0.5,0.25,0.125,,,,0,0,0
-,V.D.,Elaboración de exámenes departamentales,,,,,,,,,
-,,Responsable,2,1,0.5,,,,0,0,0
-,,Colaborador,1,0.5,0.25,,,,0,0,0
-,V.E.,Autor o coautor de libro ,,,,,,,,,
-,,De circulación regional o local,7,3.5,1.75,,,,0,0,0
-,,De circulación nacional,15,7.5,3.75,,,,0,0,0
-,,De circulación internacional,20,10,5,,,,0,0,0
-,V.F.,Autor o coautor de capítulo de libro ,1,0.5,0.25,,,,0,,
-,,De circulación regional o local,1,0.5,0.25,,,,0,0,0
-,,De circulación nacional,2,1,0.5,,,,0,0,0
-,,De circulación internacional,4,2,1,,,,0,0,0
-,V.G.,Traducción avalada institucionalmente,1,0.5,0.25,,,,0,,
-,,De capítulo de libro,1,0.5,0.25,,,,0,0,0
-,,De libro,3,1.5,0.75,,,,0,0,0
-,V.H.,Impartición de cursos de actualización disciplinar o didáctica ,0.1,0.05,0.025,,,,0,,
-,,"Para profesionistas, técnicos externos o personal académico de nivel medio superior (puntos por hora)",0.1,0.05,0.025,,,,0,0,0
-,,Para personal académico de nivel superior (puntos por hora),0.2,0.1,0.05,,,,0,0,0
-,V.I.,Diseño y elaboración cursos curriculares para la enseñanza en línea ,0.5,0.25,0.125,,,,,,
-,,De manera sincrónica,1,0.5,0.25,,,,0,0,0
-,,De manera asincrónica,2,1,0.5,,,,0,0,0
-,V.J.,Impartición de un curso diseñado para la enseñanza en línea,,,,,,,,,
-,,De manera sincrónica,0.5,0.25,0.125,,,,0,0,0
-,,De manera asincrónica,0.6,0.3,0.15,,,,0,0,0
-,V.K.,Implementación de cursos curriculares,,,,,,,,,
-,,En idioma inglés.,2,1,0.5,,,,0,0,0
-,,Tipo COIL (Collaborative Online International Learning) ,2,1,0.5,,,,0,0,0
-,,Clase espejo,1,0.5,0.25,,,,0,0,0
-,,Sumas Parciales ,,,,,,,0,0,0
-,,"Puntajes máximos por columna:  50 puntos para columna C, 100 puntos para la suma de B y C",,,,,,,0,0,0
-,,SUBTOTAL,,,,,,,0,,
-,,,,,,,,,,,
-,,,,,,,,,,,
-,VI.,ACTIVIDADES GENERALES DE DIRECCIÓN Y ACOMPAÑAMIENTO A ESTUDIANTES (max. 150 puntos),,,,,,,,,
-,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,
-,,,,,,En el área de Concurso,En otras áreas de matemáticas ,En otras áreas afínes,,,
-,,,A,B,C,A,B,C,A,B,C
-,VI.A.,Impartición de módulos de diplomado o cursos de titulación a estudiantes de nivel superior  (puntos por hora),0.1,0.05,0.025,,,,0,0,0
-,VI.B.,Premio otorgado a estudiante por labor realizada bajo supervisión del docente,,,,,,,,,
-,,Regional o local,0.5,0.25,0.125,,,,0,0,0
-,,Nacional,1,0.5,0.25,,,,0,0,0
-,,Internacional,1.5,0.75,0.375,,,,0,0,0
-,VI.C.,Dirección de Tesis o Tesina,,,,,,,,,
-,,Licenciatura,4,2,1,,,,0,0,0
-,,Maestría,8,4,2,,,,0,0,0
-,,Doctorado,16,8,4,,,,0,0,0
-,VI.D.,Asesoría de Tesis o Tesina,,,,,,,,,
-,,Licenciatura,1,0.5,0.25,,,,0,0,0
-,,Maestría,2,1,0.5,,,,0,0,0
-,,Doctorado,3,1.5,0.75,,,,0,0,0
-,VI.E.,Asesoría en otros trabajos académicos escritos para optar por el título de licenciatura ,1,0.5,0.25,,,,0,0,0
-,VI.F.,Miembro del jurado de examen de grado,,,,,,,,,
-,,Licenciatura,2,1,0.5,,,,0,0,0
-,,Maestría,4,2,1,,,,0,0,0
-,,Doctorado,8,4,2,,,,0,0,0
-,VI.G.,Asesor de grupos de estudiantes en programas de extensión y vinculación.,2,1,0.5,,,,0,0,0
-,VI.H.,Preparación de estudiantes para competencias académicas ,,,,,,,,,
-,,Coordinador,1,0.5,0.25,,,,0,0,0
-,,Asesor,0.5,0.25,0.125,,,,0,0,0
-,VI.I.,Preparación de alumnos para la presentación del EGEL,,,,,,,,,
-,,Coordinador,2,1,0.5,,,,0,0,0
-,,Asesor,1,0.5,0.25,,,,0,0,0
-,VI.J.,Asesor de estudiantes para presentación de ponencias en evento académico ,,,,,,,,,
-,,Regional o local,0.5,0.25,0.125,,,,0,0,0
-,,Nacional,1,0.5,0.25,,,,0,0,0
-,,Internacional,1.5,0.75,0.375,,,,0,0,0
-,,Sumas Parciales ,,,,,,,0,0,0
-,,"Puntajes máximos por columna:  37.5 puntos para columna C, 75 puntos para la suma de B y C",,,,,,,0,0,0
-,,SUBTOTAL,,,,,,,0,,
-,,,,,,,,,,,
-,VII.,ACTIVIDADES GENERALES DE INVESTIGACIÓN (max. 130 puntos),,,,,,,,,
-,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,
-,,,,,,En el área de Concurso,En otras áreas de matemáticas ,En otras áreas afínes,,,
-,,,A,B,C,A,B,C,A,B,C
-,VII.A.,Distinción SNII Vigente,,,,,,,,,
-,,Candidato,8,,,,,,0,,
-,,Nivel 1,12,,,,,,0,,
-,,Nivel 2,16,,,,,,0,,
-,,Nivel 3,20,,,,,,0,,
-,VII.B.,Otras distinciones en  investigación,,,,,,,,,
-,,A nivel nacional,6,3,1.5,,,,0,0,0
-,,A nivel internacional,8,4,2,,,,0,0,0
-,VII.C.,Artículo publicado en revista de catálogo ,,,,,,,,,
-,,De circulación nacional ,4,2,1,,,,0,0,0
-,,De circulación internacional ,8,4,2,,,,0,0,0
-,VII.D.,Artículo publicado en revista con arbitraje,,,,,,,,,
-,,De circulación nacional ,1,0.5,0.25,,,,0,0,0
-,,De circulación internacional ,2,1,0.5,,,,0,0,0
-,VII.E.,Participación como árbitro en publicaciones ,,,,,,,,,
-,,De circulación nacional ,0.25,0.125,0.0625,,,,0,0,0
-,,De circulación internacional ,0.5,0.25,0.125,,,,0,0,0
-,VII.F.,Participación como árbitro en ponencias,,,,,,,,,
-,,En evento nacional ,0.1,0.05,0.025,,,,0,0,0
-,,En evento internacional ,0.2,0.1,0.05,,,,0,0,0
-,VII.G.,Conferencia por invitación,,,,,,,,,
-,,En evento regional o local,0.5,0.25,0.125,,,,0,0,0
-,,En evento nacional,0.75,0.375,0.1875,,,,0,0,0
-,,En evento internacional,1,0.5,0.25,,,,0,0,0
-,VII.H.,Ponencia ,0.25,0.125,0.0625,,,,0,,
-,,En evento regional o local,0.25,0.125,0.0625,,,,0,0,0
-,,En evento nacional,0.5,0.25,0.125,,,,0,0,0
-,,En evento internacional,0.75,0.375,0.1875,,,,0,0,0
-,VII.I.,Cartel,,,,,,,,,
-,,En evento regional o local,0.1,0.05,0.025,,,,0,0,0
-,,En evento nacional,0.2,0.1,0.05,,,,0,0,0
-,,En evento internacional,0.3,0.15,0.075,,,,0,0,0
-,VII.J.,Proyecto de investigación financiado por instancias regionales o locales,,,,,,,,,
-,,Responsable,3,1.5,0.75,,,,0,0,0
-,,Colaborador,2,1,0.5,,,,0,0,0
-,VII.K.,Proyecto de investigación financiado por instancias nacionales o internacionales,,,,,,,,,
-,,Responsable,5,2.5,1.25,,,,0,0,0
-,,Colaborador,3,1.5,0.75,,,,0,0,0
-,VII.L.,Obtención de patentes ,,,,,,,,,
-,,Solicitud,2,1,0.5,,,,0,0,0
-,,Obtención,2,1,0.5,,,,0,0,0
-,VII.M.,Elaboración de Software con aplicación en el área de desempeño del docente,,,,,,,,,
-,,Responsable,3,1.5,0.75,,,,0,0,0
-,,Colaborador,1,0.5,0.25,,,,0,0,0
-,VII.N.,Estancias ,3,0.75,,,,,0,,
-,,Como profesor o investigador asistente,2,1,0.5,,,,0,0,0
-,,Como profesor o investigador invitado ,3,1.5,0.75,,,,0,0,0
-,,Sumas Parciales ,,,,,,,0,0,0
-,,"Puntajes máximos por columna:  32.5 puntos para columna C, 65 puntos para la suma de B y C",,,,,,,0,0,0
-,,SUBTOTAL,,,,,,,0,,
-,,,,,,,,,,,
-,VIII.,"ACTIVIDADES GENERALES DE GESTIÓN, EXTENSIÓN Y DIFUSIÓN (max. 60 puntos)",,,,,,,,,
-,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,
-,,,,,,En el Dpto. de Matemáticas,En otros Dptos. de la Unison,En otras instituciones,,,
-,,,A,B,C,A,B,C,A,B,C
-,VIII.A.,Integrante de comité editorial de publicación,3,0.75,,,,,0,,
-,,De catálogo,,,,,,,,,
-,,Circulación nacional,2,1,0.5,,,,0,0,0
-,,Circulación internacional,4,2,1,,,,0,0,0
-,,Con arbitraje (no incluida en catálogo) ,,,,,,,,,
-,,Circulación nacional,1,0.5,0.25,,,,0,0,0
-,,Circulación internacional,2,1,0.5,,,,0,0,0
-,VIII.B.,Participación en comisiones,,,,,,,,,
-,,De evaluación o dictaminación de proyectos académicos,2,1,0.5,,,,0,0,0
-,,Jurado para ingreso de personal académico,3,1.5,0.75,,,,0,0,0
-,,Acreditación de programas académicos,4,2,1,,,,0,0,0
-,VIII.C.,Organización de evento o congreso académico,,,,,,,,,
-,,Regional o local,2,1,0.5,,,,0,0,0
-,,Nacional,3,1.5,0.75,,,,0,0,0
-,,Internacional,4,2,1,,,,0,0,0
-,VIII.D.,Colaboración en evento o congreso académico,,,,,,,,,
-,,Regional o local,0.5,0.25,0.125,,,,0,0,0
-,,Nacional,1,0.5,0.25,,,,0,0,0
-,,Internacional,1.5,0.75,0.375,,,,0,0,0
-,VIII.E.,Organización de eventos académicos de difusión y extensión ,1,0.5,0.25,,,,0,0,0
-,VIII.F.,Producción de materiales para actividades de difusión,,,,,,,,,
-,,Responsable,2,1,0.5,,,,0,0,0
-,,Colaborador,1,0.5,0.25,,,,0,0,0
-,VIII.G.,"Responsable de proyecto de colaboración o de prestación de servicios con el sector privado, público o social.",,,,,,,,,
-,,Responsable,2,1,0.5,,,,0,0,0
-,,Colaborador,1,0.5,0.25,,,,0,0,0
-,,Sumas Parciales ,,,,,,,0,0,0
-,,"Puntajes máximos por columna:  15 puntos para columna C, 30 puntos para la suma de B y C",,,,,,,0,0,0
-,,SUBTOTAL,,,,,,,0,,
-,,,,,,,,,,,
-,,PUNTUACIÓN TOTAL,,,,,,,0,,
+,departamento,Departamento de Matemáticas,,,,,,,,,,,input_type,evidence_kind
+,campus,Campus Hermosillo. Universidad de Sonora,,,,,,,,,,,,
+,titulo,CRITERIOS DE EVALUACIÓN CURRICULAR PARA EL INGRESO DE PERSONAL ACADÉMICO DE ASIGNATURA,,,,,,,,,,,,
+,area,Área de trabajo o asignatura:,,,,,,,,,,,,
+,nombre,Nombre del Concursante:,,,,,,,,,,,,
+,I.,GRADO ACADÉMICO (max. 200 puntos),,,,,,,,,,,,
+ ,,,,Puntaje Unitario,,Unidades,,PuntajeTotal,,,,,,
+,,,,,,En matemáticas ,En área afín,,,,,,,
+,,,,A,B,A,B,,,,,,,
+,I.A.,Licenciatura ,,30,0,,,0,,,,radio,grado_licenciatura,
+,I.B,Especialización (como posgrado),,45,15,,,0,,,,radio,grado_especializacion,
+,I.C,Maestría,,100,35,,,0,,,,radio,grado_maestria,
+,I.D,Doctorado,,200,70,,,0,,,,radio,grado_doctorado,
+,,SUBTOTAL,,,,,,0,,,,,,
+,,,,,,,,,,,,,,
+,II.,EXPERIENCIA ACADÉMICA Y PROFESIONAL (max. 150 puntos),,,,,,,,,,,,
+,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,,,,
+,,,,,,En el área de Concurso,Sólo en otras áreas de matemáticas ,Sólo en otras  áreas afines,,,,,,
+,,,,,,,,,A,B,C,,,
+,,,A,B,C,A,B,C,A,B,C,,,
+,II.A.,"Semestre de docencia, investigación o extensión",,,,,,,,,,,experiencia_docencia,
+,,En instituciones de nivel medio superior ,2.5,1.25,0.625,,,,0,0,0,number,,
+,,En instituciones de nivel superior ,5,2.5,1.25,,,,0,0,0,number,,
+,II.B.,Seis meses de trabajo profesional,2.5,1.25,0.625,,,,0,0,0,number,experiencia_profesional,
+,,Sumas Parciales ,,,,,,,0,0,0,,,
+,,"Puntajes máximos por columna:  37.5 puntos para columna C, 75 puntos para la suma de B y C",,37.5,37.5,,,,0,0,0,,,
+,,SUBTOTAL,,,,,,,0,,,,,
+,,,,,,,,,,,,,,
+,III.,ANTIGÜEDAD ACADÉMICA EN LA UNIVERSIDAD DE SONORA (max. 50 puntos),,,,,,,,,,,,
+,,,Puntaje Unitario,,Unidades,,,,Puntaje Total,,,,,
+,,,,,En el Departamento de Matemáticas,,Sólo en otros Departamentos de la FICEN o la FI,,,,,,,
+,,,A,B,A,,B,,,,,,,
+,,"Semestre de docencia, investigación o extensión",2,1,,,,,0,,,number,antiguedad_unison,
+,,SUBTOTAL,,,,,,,0,,,,,
+,,,,,,,,,,,,,,
+,IV.,OTRAS ACTIVIDADES DE FORMACIÓN ACADÉMICA (max. 60 puntos),,,,,,,,,,,,
+,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,,,,
+,,,,,,En el área de Concurso,En otras áreas de matemáticas ,En otras áreas afínes,,,,,,
+,,,A,B,C,A,B,C,A,B,C,,,
+,,"Diplomado, curso o taller de actualización didáctica o disciplinaria recibido. (Puntos por hora)",0.05,0.025,0.0125,,,,0,0,0,number,formacion_cursos,
+,,"Diplomado, cursos y talleres recibidos dentro del Programa Institucional de Desarrollo de Competencias Docentes UNISON. (Puntos por hora)",0.04,0.02,0.01,,,,0,0,0,number,formacion_unison,
+,,Cursos curriculares semestrales de nivel maestría (grado inconcluso),2,1,0.5,,,,0,0,0,number,formacion_inconclusa_maestria,
+,,Cursos curriculares semestrales de nivel doctorado (grado inconcluso),3,1.5,0.75,,,,0,0,0,number,formacion_inconclusa_doctorado,
+,,Sumas Parciales ,,,,,,,0,0,0,,,
+,,"Puntajes máximos por columna:  15 puntos para columna C, 30 puntos para la suma de B y C",,,,,,,0,0,0,,,
+,,SUBTOTAL,,,,,,,0,,,,,
+,,,,,,,,,,,,,,
+,V.,ACTIVIDADES GENERALES DE PRODUCTIVIDAD DOCENTE (max. 200 puntos),,,,,,,,,,,,
+,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,,,,
+,,,,,,En el área de Concurso,En otras áreas de matemáticas ,En otras áreas afínes,,,,,,
+,,,A,B,C,A,B,C,A,B,C,,,
+,V.A.,Diseño de Planes de Estudio en sus diversos grados y modalidades.,,,,,,,,,,,,
+,,Coordinador de la comisión responsable ,4,2,1,,,,0,0,0,number,,
+,,Miembro de la comisión responsable. ,3,1.5,0.75,,,,0,0,0,number,,
+,,Participante en actividades específicas.,1,0.5,0.25,,,,0,0,0,number,,
+,V.B.,Proyecto de Docencia ,1,0.5,0.25,,,,0,,,number,,
+,,Responsable,2,1,0.5,,,,0,0,0,number,,
+,,Colaborador,1.5,0.75,0.375,,,,0,0,0,number,,
+,V.C.,"Elaboración de manuales, notas o material didáctico para un curso curricular completo",,,,,,,,,,,,
+,,Responsable,1,0.5,0.25,,,,0,0,0,number,,
+,,Colaborador,0.5,0.25,0.125,,,,0,0,0,number,,
+,V.D.,Elaboración de exámenes departamentales,,,,,,,,,,,,
+,,Responsable,2,1,0.5,,,,0,0,0,number,,
+,,Colaborador,1,0.5,0.25,,,,0,0,0,number,,
+,V.E.,Autor o coautor de libro ,,,,,,,,,,,,
+,,De circulación regional o local,7,3.5,1.75,,,,0,0,0,number,,
+,,De circulación nacional,15,7.5,3.75,,,,0,0,0,number,,
+,,De circulación internacional,20,10,5,,,,0,0,0,number,,
+,V.F.,Autor o coautor de capítulo de libro ,1,0.5,0.25,,,,0,,,number,,
+,,De circulación regional o local,1,0.5,0.25,,,,0,0,0,number,,
+,,De circulación nacional,2,1,0.5,,,,0,0,0,number,,
+,,De circulación internacional,4,2,1,,,,0,0,0,number,,
+,V.G.,Traducción avalada institucionalmente,1,0.5,0.25,,,,0,,,number,,
+,,De capítulo de libro,1,0.5,0.25,,,,0,0,0,number,,
+,,De libro,3,1.5,0.75,,,,0,0,0,number,,
+,V.H.,Impartición de cursos de actualización disciplinar o didáctica ,0.1,0.05,0.025,,,,0,,,number,,
+,,"Para profesionistas, técnicos externos o personal académico de nivel medio superior (puntos por hora)",0.1,0.05,0.025,,,,0,0,0,number,,
+,,Para personal académico de nivel superior (puntos por hora),0.2,0.1,0.05,,,,0,0,0,number,,
+,V.I.,Diseño y elaboración cursos curriculares para la enseñanza en línea ,0.5,0.25,0.125,,,,,,,number,,
+,,De manera sincrónica,1,0.5,0.25,,,,0,0,0,number,,
+,,De manera asincrónica,2,1,0.5,,,,0,0,0,number,,
+,V.J.,Impartición de un curso diseñado para la enseñanza en línea,,,,,,,,,,,,
+,,De manera sincrónica,0.5,0.25,0.125,,,,0,0,0,number,,
+,,De manera asincrónica,0.6,0.3,0.15,,,,0,0,0,number,,
+,V.K.,Implementación de cursos curriculares,,,,,,,,,,,,
+,,En idioma inglés.,2,1,0.5,,,,0,0,0,number,,
+,,Tipo COIL (Collaborative Online International Learning) ,2,1,0.5,,,,0,0,0,number,,
+,,Clase espejo,1,0.5,0.25,,,,0,0,0,number,,
+,,Sumas Parciales ,,,,,,,0,0,0,,,
+,,"Puntajes máximos por columna:  50 puntos para columna C, 100 puntos para la suma de B y C",,,,,,,0,0,0,,,
+,,SUBTOTAL,,,,,,,0,,,,,
+,,,,,,,,,,,,,,
+,VI.,ACTIVIDADES GENERALES DE DIRECCIÓN Y ACOMPAÑAMIENTO A ESTUDIANTES (max. 150 puntos),,,,,,,,,,,,
+,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,,,,
+,,,,,,En el área de Concurso,En otras áreas de matemáticas ,En otras áreas afínes,,,,,,
+,,,A,B,C,A,B,C,A,B,C,,,
+,VI.A.,Impartición de módulos de diplomado o cursos de titulación a estudiantes de nivel superior  (puntos por hora),0.1,0.05,0.025,,,,0,0,0,number,,
+,VI.B.,Premio otorgado a estudiante por labor realizada bajo supervisión del docente,,,,,,,,,,,,
+,,Regional o local,0.5,0.25,0.125,,,,0,0,0,number,,
+,,Nacional,1,0.5,0.25,,,,0,0,0,number,,
+,,Internacional,1.5,0.75,0.375,,,,0,0,0,number,,
+,VI.C.,Dirección de Tesis o Tesina,,,,,,,,,,,,
+,,Licenciatura,4,2,1,,,,0,0,0,number,,
+,,Maestría,8,4,2,,,,0,0,0,number,,
+,,Doctorado,16,8,4,,,,0,0,0,number,,
+,VI.D.,Asesoría de Tesis o Tesina,,,,,,,,,,,,
+,,Licenciatura,1,0.5,0.25,,,,0,0,0,number,,
+,,Maestría,2,1,0.5,,,,0,0,0,number,,
+,,Doctorado,3,1.5,0.75,,,,0,0,0,number,,
+,VI.E.,Asesoría en otros trabajos académicos escritos para optar por el título de licenciatura ,1,0.5,0.25,,,,0,0,0,number,,
+,VI.F.,Miembro del jurado de examen de grado,,,,,,,,,,,,
+,,Licenciatura,2,1,0.5,,,,0,0,0,number,,
+,,Maestría,4,2,1,,,,0,0,0,number,,
+,,Doctorado,8,4,2,,,,0,0,0,number,,
+,VI.G.,Asesor de grupos de estudiantes en programas de extensión y vinculación.,2,1,0.5,,,,0,0,0,number,,
+,VI.H.,Preparación de estudiantes para competencias académicas ,,,,,,,,,,,,
+,,Coordinador,1,0.5,0.25,,,,0,0,0,number,,
+,,Asesor,0.5,0.25,0.125,,,,0,0,0,number,,
+,VI.I.,Preparación de alumnos para la presentación del EGEL,,,,,,,,,,,,
+,,Coordinador,2,1,0.5,,,,0,0,0,number,,
+,,Asesor,1,0.5,0.25,,,,0,0,0,number,,
+,VI.J.,Asesor de estudiantes para presentación de ponencias en evento académico ,,,,,,,,,,,,
+,,Regional o local,0.5,0.25,0.125,,,,0,0,0,number,,
+,,Nacional,1,0.5,0.25,,,,0,0,0,number,,
+,,Internacional,1.5,0.75,0.375,,,,0,0,0,number,,
+,,Sumas Parciales ,,,,,,,0,0,0,,,
+,,"Puntajes máximos por columna:  37.5 puntos para columna C, 75 puntos para la suma de B y C",,,,,,,0,0,0,,,
+,,SUBTOTAL,,,,,,,0,,,,,
+,,,,,,,,,,,,,,
+,VII.,ACTIVIDADES GENERALES DE INVESTIGACIÓN (max. 130 puntos),,,,,,,,,,,,
+,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,,,,
+,,,,,,En el área de Concurso,En otras áreas de matemáticas ,En otras áreas afínes,,,,,,
+,,,A,B,C,A,B,C,A,B,C,,,
+,VII.A.,Distinción SNII Vigente,,,,,,,,,,,,
+,,Candidato,8,,,,,,0,,,number,,
+,,Nivel 1,12,,,,,,0,,,number,,
+,,Nivel 2,16,,,,,,0,,,number,,
+,,Nivel 3,20,,,,,,0,,,number,,
+,VII.B.,Otras distinciones en  investigación,,,,,,,,,,,,
+,,A nivel nacional,6,3,1.5,,,,0,0,0,number,,
+,,A nivel internacional,8,4,2,,,,0,0,0,number,,
+,VII.C.,Artículo publicado en revista de catálogo ,,,,,,,,,,,,
+,,De circulación nacional ,4,2,1,,,,0,0,0,number,,
+,,De circulación internacional ,8,4,2,,,,0,0,0,number,,
+,VII.D.,Artículo publicado en revista con arbitraje,,,,,,,,,,,,
+,,De circulación nacional ,1,0.5,0.25,,,,0,0,0,number,,
+,,De circulación internacional ,2,1,0.5,,,,0,0,0,number,,
+,VII.E.,Participación como árbitro en publicaciones ,,,,,,,,,,,,
+,,De circulación nacional ,0.25,0.125,0.0625,,,,0,0,0,number,,
+,,De circulación internacional ,0.5,0.25,0.125,,,,0,0,0,number,,
+,VII.F.,Participación como árbitro en ponencias,,,,,,,,,,,,
+,,En evento nacional ,0.1,0.05,0.025,,,,0,0,0,number,,
+,,En evento internacional ,0.2,0.1,0.05,,,,0,0,0,number,,
+,VII.G.,Conferencia por invitación,,,,,,,,,,,,
+,,En evento regional o local,0.5,0.25,0.125,,,,0,0,0,number,,
+,,En evento nacional,0.75,0.375,0.1875,,,,0,0,0,number,,
+,,En evento internacional,1,0.5,0.25,,,,0,0,0,number,,
+,VII.H.,Ponencia ,0.25,0.125,0.0625,,,,0,,,,,
+,,En evento regional o local,0.25,0.125,0.0625,,,,0,0,0,number,,
+,,En evento nacional,0.5,0.25,0.125,,,,0,0,0,number,,
+,,En evento internacional,0.75,0.375,0.1875,,,,0,0,0,number,,
+,VII.I.,Cartel,,,,,,,,,,,,
+,,En evento regional o local,0.1,0.05,0.025,,,,0,0,0,number,,
+,,En evento nacional,0.2,0.1,0.05,,,,0,0,0,number,,
+,,En evento internacional,0.3,0.15,0.075,,,,0,0,0,number,,
+,VII.J.,Proyecto de investigación financiado por instancias regionales o locales,,,,,,,,,,,,
+,,Responsable,3,1.5,0.75,,,,0,0,0,number,,
+,,Colaborador,2,1,0.5,,,,0,0,0,number,,
+,VII.K.,Proyecto de investigación financiado por instancias nacionales o internacionales,,,,,,,,,,,,
+,,Responsable,5,2.5,1.25,,,,0,0,0,number,,
+,,Colaborador,3,1.5,0.75,,,,0,0,0,number,,
+,VII.L.,Obtención de patentes ,,,,,,,,,,,,
+,,Solicitud,2,1,0.5,,,,0,0,0,number,,
+,,Obtención,2,1,0.5,,,,0,0,0,number,,
+,VII.M.,Elaboración de Software con aplicación en el área de desempeño del docente,,,,,,,,,,,,
+,,Responsable,3,1.5,0.75,,,,0,0,0,number,,
+,,Colaborador,1,0.5,0.25,,,,0,0,0,number,,
+,VII.N.,Estancias ,3,0.75,,,,,0,,,number,,
+,,Como profesor o investigador asistente,2,1,0.5,,,,0,0,0,number,,
+,,Como profesor o investigador invitado ,3,1.5,0.75,,,,0,0,0,number,,
+,,Sumas Parciales ,,,,,,,0,0,0,,,
+,,"Puntajes máximos por columna:  32.5 puntos para columna C, 65 puntos para la suma de B y C",,,,,,,0,0,0,,,
+,,SUBTOTAL,,,,,,,0,,,,,
+,,,,,,,,,,,,,,
+,VIII.,"ACTIVIDADES GENERALES DE GESTIÓN, EXTENSIÓN Y DIFUSIÓN (max. 60 puntos)",,,,,,,,,,,,
+,,,Puntaje Unitario,,,Unidades,,,Puntaje Total,,,,,
+,,,,,,En el Dpto. de Matemáticas,En otros Dptos. de la Unison,En otras instituciones,,,,,,
+,,,A,B,C,A,B,C,A,B,C,,,
+,VIII.A.,Integrante de comité editorial de publicación,3,0.75,,,,,0,,,number,,
+,,De catálogo,,,,,,,,,,,,
+,,Circulación nacional,2,1,0.5,,,,0,0,0,number,,
+,,Circulación internacional,4,2,1,,,,0,0,0,number,,
+,,Con arbitraje (no incluida en catálogo) ,,,,,,,,,,,,
+,,Circulación nacional,1,0.5,0.25,,,,0,0,0,number,,
+,,Circulación internacional,2,1,0.5,,,,0,0,0,number,,
+,VIII.B.,Participación en comisiones,,,,,,,,,,,,
+,,De evaluación o dictaminación de proyectos académicos,2,1,0.5,,,,0,0,0,number,,
+,,Jurado para ingreso de personal académico,3,1.5,0.75,,,,0,0,0,number,,
+,,Acreditación de programas académicos,4,2,1,,,,0,0,0,number,,
+,VIII.C.,Organización de evento o congreso académico,,,,,,,,,,,,
+,,Regional o local,2,1,0.5,,,,0,0,0,number,,
+,,Nacional,3,1.5,0.75,,,,0,0,0,number,,
+,,Internacional,4,2,1,,,,0,0,0,number,,
+,VIII.D.,Colaboración en evento o congreso académico,,,,,,,,,,,,
+,,Regional o local,0.5,0.25,0.125,,,,0,0,0,number,,
+,,Nacional,1,0.5,0.25,,,,0,0,0,number,,
+,,Internacional,1.5,0.75,0.375,,,,0,0,0,number,,
+,VIII.E.,Organización de eventos académicos de difusión y extensión ,1,0.5,0.25,,,,0,0,0,number,,
+,VIII.F.,Producción de materiales para actividades de difusión,,,,,,,,,,,,
+,,Responsable,2,1,0.5,,,,0,0,0,number,,
+,,Colaborador,1,0.5,0.25,,,,0,0,0,number,,
+,VIII.G.,"Responsable de proyecto de colaboración o de prestación de servicios con el sector privado, público o social.",,,,,,,,,,,,
+,,Responsable,2,1,0.5,,,,0,0,0,number,,
+,,Colaborador,1,0.5,0.25,,,,0,0,0,number,,
+,,Sumas Parciales ,,,,,,,0,0,0,,,
+,,"Puntajes máximos por columna:  15 puntos para columna C, 30 puntos para la suma de B y C",,,,,,,0,0,0,,,
+,,SUBTOTAL,,,,,,,0,,,,,
+,,,,,,,,,,,,,,
+,,PUNTUACIÓN TOTAL,,,,,,,0,,,,,

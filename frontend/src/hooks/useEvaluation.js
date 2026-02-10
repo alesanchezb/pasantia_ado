@@ -10,9 +10,9 @@ export function useEvaluation() {
   useEffect(() => {
     const loadEvaluation = async () => {
       try {
-        console.log("📡 Pidiendo criterios...");
+        console.log("Pidiendo criterios...");
         const response = await EvaluationAPI.criterios();
-        console.log("✅ Respuesta backend:", response);
+        console.log("Respuesta backend:", response);
 
         // Si el backend ya devuelve la estructura jerárquica (con 'items' e 'inputs'), 
         // lo guardamos directo.
