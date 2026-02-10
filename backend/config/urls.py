@@ -34,6 +34,7 @@ def home(_request):
         ]
     })
 
+""""
 urlpatterns = [
     path("", home),
     path('admin/', admin.site.urls),
@@ -43,7 +44,11 @@ urlpatterns = [
     path("api/auth/login/", login_view),
     path("api/auth/logout/", logout_view),
 ]
-
+"""
+urlpatterns = [
+    path("admin/", admin.site.urls),
+    path("api/", include("apps.profiles.urls")),
+]
 urlpatterns += static(
         setting.MEDIA_URL,
         document_root=setting.MEDIA_ROOT

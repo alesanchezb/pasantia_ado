@@ -26,12 +26,14 @@ export default function ApplicantDocumentsPage() {
 
   const upload = async () => {
     if (!file) return alert("Selecciona un archivo");
+
     const fd = new FormData();
     fd.append("file", file);
     fd.append("name", name || file.name);
     if (kind) fd.append("kind", kind);
 
     await ProfileAPI.uploadEvidence(fd);
+
     setFile(null);
     setName("");
     setKind("");
@@ -52,7 +54,11 @@ export default function ApplicantDocumentsPage() {
       <div className="rounded-xl border p-4 space-y-3 max-w-2xl">
         <div className="font-medium">Subir evidencia</div>
 
-        <input className="block" type="file" onChange={(e) => setFile(e.target.files?.[0] || null)} />
+        <input
+          className="block"
+          type="file"
+          onChange={(e) => setFile(e.target.files?.[0] || null)}
+        />
 
         <input
           className="w-full border rounded-lg p-2"
@@ -61,12 +67,17 @@ export default function ApplicantDocumentsPage() {
           onChange={(e) => setName(e.target.value)}
         />
 
-        <input
+        <select
           className="w-full border rounded-lg p-2"
-          placeholder="Tipo (opcional) ej: constancia"
           value={kind}
           onChange={(e) => setKind(e.target.value)}
-        />
+        >
+          <option value="">Selecciona tipo (opcional)</option>
+          <option value="cv">CV</option>
+          <option value="grado_licenciatura">Grado licenciatura</option>
+          <option value="grado_doctorado">Grado doctorado</option>
+          <option value="constancia">Constancia</option>
+        </select>
 
         <button className="px-4 py-2 rounded-lg border" onClick={upload}>
           Subir

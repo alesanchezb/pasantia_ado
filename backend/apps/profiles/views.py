@@ -9,113 +9,77 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from ..services import ProfileService, EvidenceService
 from .serializers import ProfileSerializer, EvidenceSerializer
 
-
-class ProfileMeView(APIView):
-    """
-    Handles retrieving and updating the profile for the logged-in user.
-    """
-    permission_classes = [IsAuthenticated]
-
-    def get(self, request):
-        profile = ProfileService.get_or_create_profile(request.user)
-        serializer = ProfileSerializer(profile)
-        return Response(serializer.data)
-
-    def put(self, request):
-        profile = ProfileService.get_or_create_profile(request.user)
-        serializer = ProfileSerializer(instance=profile, data=request.data, partial=True)
-        serializer.is_valid(raise_exception=True)
-        serializer.save()
-        return Response(serializer.data)
+def _evidence_to_dict(e: Evidence, request):
+    file_url = e.file.url if e.file else None
+    return {
+        "id": e.id,
+        "name": e.name,
+        "kind": e.kind,
+        "file_url": file_url,
+        "created_at": e.created_at.isoformat() if e.created_at else None,
+    }
 
 
-class EvidenceView(APIView):
-    """
-    Handles listing and creating evidences for the logged-in user.
-    """
-    permission_classes = [IsAuthenticated]
-    parser_classes = [MultiPartParser, FormParser]  # For file uploads
+@require_http_methods(["GET", "POST"])
+@csrf_exempt
+def evidences_me(request):
+    auth = _require_auth(request)
+    if auth:
+        return auth
 
-    def get(self, request):
-        profile = ProfileService.get_or_create_profile(request.user)
-        evidences = EvidenceService.get_evidences_for_profile(profile)
-        serializer = EvidenceSerializer(evidences, many=True, context={'request': request})
-        return Response(serializer.data)
+    profile = _get_or_create_profile(request.user)
 
-    def post(self, request):
-        profile = ProfileService.get_or_create_profile(request.user)
+    if request.method == "GET":
+        evidences = Evidence.objects.filter(profile=profile).order_by("-created_at")
+        return JsonResponse([_evidence_to_dict(e, request) for e in evidences], safe=False)
 
-        # The serializer validates 'name', 'kind', and 'file'
-        # We pass the request context to build the absolute file URL on response
-        serializer = EvidenceSerializer(data=request.data, context={'request': request})
-        serializer.is_valid(raise_exception=True)
+    upload = request.FILES.get("file")
+    name = request.POST.get("name") or (upload.name if upload else None)
+    kind = request.POST.get("kind") or ""
 
-        # We use the service to perform the creation
-        # The serializer's 'validated_data' contains the required fields
-        new_evidence = EvidenceService.create_evidence(
-            profile=profile, **serializer.validated_data
-        )
+    if not upload:
+        return JsonResponse({"detail": "Missing file"}, status=400)
+    if not name:
+        return JsonResponse({"detail": "Missing name"}, status=400)
 
-        # We serialize the created object to return it, including the new file_url
-        result_serializer = EvidenceSerializer(new_evidence, context={'request': request})
-        return Response(result_serializer.data, status=status.HTTP_201_CREATED)
+    e = Evidence.objects.create(profile=profile, name=name, kind=kind, file=upload)
+    return JsonResponse(_evidence_to_dict(e, request), status=201)
 
 
-class EvidenceDetailView(APIView):
-    """
-    Handles deleting a specific evidence.
-    """
-    permission_classes = [IsAuthenticated]
+@require_http_methods(["DELETE"])
+@csrf_exempt
+def evidence_delete(request, evidence_id: int):
+    auth = _require_auth(request)
+    if auth:
+        return auth
 
-    def delete(self, request, evidence_id: int):
-        profile = ProfileService.get_or_create_profile(request.user)
+    profile = _get_or_create_profile(request.user)
 
-        was_deleted = EvidenceService.delete_evidence(
-            profile=profile, evidence_id=evidence_id
-        )
+    try:
+        e = Evidence.objects.get(id=evidence_id, profile=profile)
+    except Evidence.DoesNotExist:
+        return JsonResponse({"detail": "Not found"}, status=404)
 
-        if was_deleted:
-            return Response(status=status.HTTP_204_NO_CONTENT)
-        
-        return Response({"detail": "Not found."}, status=status.HTTP_404_NOT_FOUND)
+    e.file.delete(save=False)
+    e.delete()
+    return JsonResponse({"ok": True})
 
+from django.http import JsonResponse
+from django.contrib.auth.decorators import login_required
+from .models import Profile
+"""
+@login_required
 
-class DevelopmentLoginView(APIView):
-    """
-    Development-only endpoint to quickly log in or create a user.
-    Accepts a POST request with "username" and "role" ('applicant' or 'evaluator').
-    Returns JWT access and refresh tokens.
-    """
-    permission_classes = []  # No permissions needed to log in
+def me(request):
+    profile, _ = Profile.objects.get_or_create(user=request.user)
 
-    def post(self, request):
-        username = request.data.get("username")
-        role = request.data.get("role")
-
-        if not username:
-            return Response({"detail": "Username is required."}, status=status.HTTP_400_BAD_REQUEST)
-
-        if role not in ['applicant', 'evaluator']:
-            return Response({"detail": "Role must be 'applicant' or 'evaluator'."}, status=status.HTTP_400_BAD_REQUEST)
-
-        # Get or create the user
-        user, _ = User.objects.get_or_create(username=username)
-
-        # Get or create the profile and set the role
-        profile = ProfileService.get_or_create_profile(user)
-        if profile.role != role:
-            profile.role = role
-            profile.save()
-
-        # Generate tokens
-        refresh = RefreshToken.for_user(user)
-
-        return Response({
-            'refresh': str(refresh),
-            'access': str(refresh.access_token),
-            'user': {
-                'id': user.id,
-                'username': user.username,
-                'role': profile.role,
-            }
-        })
+    return JsonResponse({
+        "id": profile.id,
+        "full_name": profile.full_name,
+        "phone": profile.phone,
+        "department": profile.department,
+        "summary": profile.summary,
+        "role": profile.role,
+    })
+"""
+>>>>>>> 79c91c5b7c5c576853e43bde0d7e6d5a623f0914
