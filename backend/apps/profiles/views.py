@@ -1,13 +1,60 @@
-from django.contrib.auth.models import User
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
-from rest_framework.parsers import MultiPartParser, FormParser
-from rest_framework import status
-from rest_framework_simplejwt.tokens import RefreshToken
+import json
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
 
-from ..services import ProfileService, EvidenceService
-from .serializers import ProfileSerializer, EvidenceSerializer
+from .models import Profile, Evidence
+
+
+def _require_auth(request):
+    if not request.user.is_authenticated:
+        return JsonResponse({"detail": "Authentication required"}, status=401)
+    return None
+
+
+def _get_or_create_profile(user):
+    profile, _ = Profile.objects.get_or_create(user=user)
+    return profile
+
+
+def _profile_to_dict(p: Profile):
+    return {
+        "id": p.id,
+        "user_id": p.user_id,
+        "role": p.role,
+        "full_name": p.full_name,
+        "phone": p.phone,
+        "department": p.department,
+        "summary": p.summary,
+        "updated_at": p.updated_at.isoformat() if p.updated_at else None,
+    }
+
+
+@require_http_methods(["GET", "PUT", "PATCH"])
+@csrf_exempt
+def profile_me(request):
+    auth = _require_auth(request)
+    if auth:
+        return auth
+
+    profile = _get_or_create_profile(request.user)
+
+    if request.method == "GET":
+        return JsonResponse(_profile_to_dict(profile), safe=False)
+
+    # PUT/PATCH
+    try:
+        payload = json.loads(request.body.decode("utf-8") or "{}")
+    except Exception:
+        return JsonResponse({"detail": "Invalid JSON body"}, status=400)
+
+    for field in ["full_name", "phone", "department", "summary"]:
+        if field in payload:
+            setattr(profile, field, payload[field] or "")
+
+    profile.save()
+    return JsonResponse(_profile_to_dict(profile), safe=False)
+
 
 def _evidence_to_dict(e: Evidence, request):
     file_url = e.file.url if e.file else None
@@ -82,4 +129,3 @@ def me(request):
         "role": profile.role,
     })
 """
->>>>>>> 79c91c5b7c5c576853e43bde0d7e6d5a623f0914
