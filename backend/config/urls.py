@@ -22,6 +22,7 @@ from core.views import criterios_evaluation
 from django.urls import path, include
 from django.http import JsonResponse
 from core.views import login_view, logout_view
+from django.conf import settings
 
 def home(_request):
     return JsonResponse({
@@ -49,3 +50,7 @@ urlpatterns += static(
         setting.MEDIA_URL,
         document_root=setting.MEDIA_ROOT
 )
+
+if settings.DEBUG:
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

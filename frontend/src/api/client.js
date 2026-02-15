@@ -1,4 +1,7 @@
-const API_BASE = import.meta.env.VITE_API_URL ?? "http://localhost:8000/api";
+const API_BASE =
+  (import.meta.env.VITE_API_URL && import.meta.env.VITE_API_URL.trim()) ||
+  "http://localhost:8000/api";
+
 
 function getCookie(name) {
   const m = document.cookie.match(new RegExp("(^| )" + name + "=([^;]+)"));
@@ -32,7 +35,6 @@ async function request(path, options = {}) {
         : options.body,
   });
 
-  // 🔴 AQUÍ VA EL BLOQUE
   if (res.status === 401) {
     if (window.location.pathname !== "/login") {
       window.location.href = "/login";

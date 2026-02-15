@@ -5,10 +5,10 @@ export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      "/api": "http://localhost:8000",
-      "/admin": "http://localhost:8000",
-      "/static": "http://localhost:8000",
-      "/media": "http://localhost:8000",
+      "/api": { target: "http://127.0.0.1:8000", changeOrigin: true },
+      "/admin": { target: "http://127.0.0.1:8000", changeOrigin: true },
+      "/static": { target: "http://127.0.0.1:8000", changeOrigin: true },
+      "/media": { target: "http://127.0.0.1:8000", changeOrigin: true },
     },
   },
 });

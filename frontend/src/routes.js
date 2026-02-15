@@ -8,5 +8,4 @@ export const ROUTES = {
   APPLICANT_EVIDENCES: "/applicant/evidences",
 
   EVALUATION: "/evaluation/:id",
-  PROFILE: "/profile/me/",
 };
