@@ -1,5 +1,5 @@
 import { createContext, useContext, useState, useEffect } from "react";
-import { apiPostJson } from "../api/client";
+import { AuthAPI } from "../api/auth.api";
 
 const AuthContext = createContext(null);
 
@@ -24,16 +24,30 @@ export function AuthProvider({ children }) {
     }
   }, [token]);
 
-  const login = async (username, role) => {
-    const data = await apiPostJson("/profiles/auth/dev-login/", { username, role });
-    if (data.access && data.user) {
-      localStorage.setItem("authToken", data.access);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      setToken(data.access);
-      setUser(data.user);
-      return data.user; // Devolvemos el usuario para que el componente de login pueda redirigir
-    }
-    throw new Error("Login failed: No token or user received.");
+  const login = async (username, password) => {
+    // 1. Get CSRF token
+    await AuthAPI.csrf();
+    
+    // 2. Login
+    await AuthAPI.login(username, password);
+    
+    // 3. Get user profile to know the role
+    // We can't get the user directly from login response anymore with standard session auth,
+    // so we fetch 'me' endpoint.
+    const { ProfileAPI } = await import("../api/profile.api");
+    const userProfile = await ProfileAPI.me();
+    
+    // 4. Store session data
+    // For session auth, we don't strictly need a token in localStorage, 
+    // but we use it to mark "isAuthenticated".
+    // We'll store a dummy token or just the user object.
+    const dummyToken = "session_active";
+    localStorage.setItem("authToken", dummyToken);
+    localStorage.setItem("user", JSON.stringify(userProfile));
+    
+    setToken(dummyToken);
+    setUser(userProfile);
+    return userProfile;
   };
 
   const logout = () => {

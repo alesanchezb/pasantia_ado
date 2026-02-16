@@ -60,6 +60,7 @@ export const apiPutJson = (path, body) =>
   request(path, { method: "PUT", body });
 export const apiPostJson = (path, body) =>
   request(path, { method: "POST", body });
+export const apiPost = apiPostJson;
 export const apiPostForm = (path, formData) =>
   request(path, { method: "POST", body: formData });
 export const apiDelete = (path) =>

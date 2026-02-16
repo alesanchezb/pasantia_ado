@@ -123,3 +123,5 @@ jspm_packages
 gemini.md
 
 db.sqlite3
+
+backend/media

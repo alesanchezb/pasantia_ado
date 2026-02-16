@@ -41,5 +41,10 @@ def api_register(request):
         return JsonResponse({"detail": "Ese usuario ya existe"}, status=400)
 
     user = User.objects.create_user(username=username, password=password)
+    
+    # NEW: Create a Profile for the user
+    from .models import Profile
+    Profile.objects.create(user=user, role=Profile.ROLE_APPLICANT)
+    
     login(request, user)  # opcional: te loguea al registrarte
     return JsonResponse({"detail": "ok"})

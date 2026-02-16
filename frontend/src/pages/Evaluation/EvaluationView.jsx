@@ -66,8 +66,26 @@ const EvidenceViewer = ({ evidenceKind }) => {
 // ==========================================
 // COMPONENTE PRINCIPAL DE EVALUACIÓN
 // ==========================================
-export default function EvaluationView({ evaluationData }) {
-  const [valores, setValores] = useState({});
+export default function EvaluationView({ evaluationData, savedScores = {}, onSave }) {
+  const [valores, setValores] = useState(savedScores);
+
+  // Actualizar valores si llegan nuevos savedScores (ej. carga asíncrona)
+  React.useEffect(() => {
+    if (Object.keys(savedScores).length > 0) {
+      setValores(prev => ({ ...prev, ...savedScores }));
+    }
+  }, [savedScores]);
+
+  const handleSave = async () => {
+    if (onSave) {
+        try {
+            await onSave(valores, "COMPLETED");
+            alert("Evaluación guardada correctamente");
+        } catch (error) {
+            alert("Error al guardar la evaluación");
+        }
+    }
+  };
 
   const handleRadioClick = (sectionId, item, selectedKey) => {
     const uniqueKey = `${sectionId}_${item.id}_${selectedKey}`;
@@ -293,7 +311,9 @@ export default function EvaluationView({ evaluationData }) {
                         {seccionesCalculadas.reduce((acc, sec) => acc + Math.min(sec.totalSeccion, sec.max_puntos), 0).toFixed(2)}
                     </div>
                  </div>
-                 <button className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg shadow-blue-600/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
+                 <button 
+                     onClick={handleSave}
+                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg shadow-blue-600/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
                     Finalizar Evaluación
                  </button>
              </div>

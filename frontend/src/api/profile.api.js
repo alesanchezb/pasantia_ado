@@ -9,4 +9,5 @@ export const ProfileAPI = {
   listEvidences: () => apiGet(PROFILE_BASE + "evidences/"),
   uploadEvidence: (formData) => apiPostForm(PROFILE_BASE + "evidences/", formData),
   deleteEvidence: (id) => apiDelete(PROFILE_BASE + `evidences/${id}/`),
+  listApplicants: () => apiGet("/applicants/"),
 };
