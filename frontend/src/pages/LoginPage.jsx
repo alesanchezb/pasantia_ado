@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../routes";
-import { AuthAPI } from "../api/auth.api";
+import { useAuth } from "../context/AuthContext";
 import { Link } from "react-router-dom";
 
 export default function LoginPage() {
@@ -11,14 +11,22 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState("");
 
+  const { login } = useAuth();
+
   const onLogin = async () => {
     setLoading(true);
     setErr("");
     try {
-      await AuthAPI.csrf();                 // obtiene csrftoken cookie
-      await AuthAPI.login(username, password); // crea sesión (cookie)
-      nav(ROUTES.APPLICANT_DASHBOARD);
+      // Use useAuth().login to update global state and get user profile
+      const user = await login(username, password);
+      
+      if (user.role === "EVALUATOR") {
+        nav(ROUTES.EVALUATOR_DASHBOARD);
+      } else {
+        nav(ROUTES.APPLICANT_DASHBOARD);
+      }
     } catch (e) {
+      console.error(e);
       setErr("No se pudo iniciar sesión.");
     } finally {
       setLoading(false);

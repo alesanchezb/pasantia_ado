@@ -51,6 +51,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'apps.profiles',
+    'apps.evaluation',
 ]
 
 MIDDLEWARE = [

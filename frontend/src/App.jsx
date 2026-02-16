@@ -9,6 +9,7 @@ import ApplicantProfilePage from "./pages/Applicant/ApplicantProfilePage";
 import ApplicantDocumentsPage from "./pages/Applicant/ApplicantDocumentsPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
+import EvaluatorDashboard from "./pages/Evaluator/EvaluatorDashboard";
 
 import "./index.css";
 
@@ -28,6 +29,9 @@ export default function App() {
           <Route path={ROUTES.APPLICANT_DASHBOARD} element={<ApplicantDashboard />} />
           <Route path={ROUTES.APPLICANT_PROFILE} element={<ApplicantProfilePage />} />
           <Route path={ROUTES.APPLICANT_EVIDENCES} element={<ApplicantDocumentsPage />} />
+
+          {/* evaluator */}
+          <Route path={ROUTES.EVALUATOR_DASHBOARD} element={<EvaluatorDashboard />} />
 
           {/* evaluation */}
           <Route path={ROUTES.EVALUATION} element={<EvaluationPage />} />

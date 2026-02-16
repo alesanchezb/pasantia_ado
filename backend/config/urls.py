@@ -39,11 +39,9 @@ urlpatterns = [
     path("", home),
     path('admin/', admin.site.urls),
     path("api/evaluation/criterios/", criterios_evaluation),
+    path("api/evaluation/", include("apps.evaluation.urls")),
+    # Apps Profiles se encargará de /api/auth/ y /api/profile/ ...
     path("api/", include("apps.profiles.urls")),
-    # Solicitante
-    path("api/profiles/", include("apps.profiles.urls")),
-    path("api/auth/login/", login_view),
-    path("api/auth/logout/", logout_view),
 ]
 
 urlpatterns += static(

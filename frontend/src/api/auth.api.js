@@ -1,9 +1,9 @@
 import { apiGet, apiPostJson } from "./client";
 
 export const AuthAPI = {
-  csrf: () => apiGet("/api/auth/csrf/"),
-  login: (username, password) => apiPostJson("/api/auth/login/", { username, password }),
-  logout: () => apiPostJson("/api/auth/logout/", {}),
-  register: (username, password) => apiPostJson("/api/auth/register/", { username, password }),
+  csrf: () => apiGet("/auth/csrf/"),
+  login: (username, password) => apiPostJson("/auth/login/", { username, password }),
+  logout: () => apiPostJson("/auth/logout/", {}),
+  register: (username, password) => apiPostJson("/auth/register/", { username, password }),
 
 };

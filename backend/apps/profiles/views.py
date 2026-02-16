@@ -111,21 +111,15 @@ def evidence_delete(request, evidence_id: int):
     e.delete()
     return JsonResponse({"ok": True})
 
-from django.http import JsonResponse
-from django.contrib.auth.decorators import login_required
-from .models import Profile
-"""
-@login_required
+@require_http_methods(["GET"])
+@csrf_exempt
+def applicant_list(request):
+    auth = _require_auth(request)
+    if auth:
+        return auth
 
-def me(request):
-    profile, _ = Profile.objects.get_or_create(user=request.user)
-
-    return JsonResponse({
-        "id": profile.id,
-        "full_name": profile.full_name,
-        "phone": profile.phone,
-        "department": profile.department,
-        "summary": profile.summary,
-        "role": profile.role,
-    })
-"""
+    # Verificar si es evaluador o admin (opcional, pero recomendado)
+    # Por ahora solo requerimos autenticación para simplificar
+    
+    applicants = Profile.objects.filter(role=Profile.ROLE_APPLICANT).order_by("-updated_at")
+    return JsonResponse([_profile_to_dict(p) for p in applicants], safe=False)
