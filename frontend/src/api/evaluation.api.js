@@ -1,4 +1,4 @@
-import { apiGet } from "./client";
+import { apiGet, apiPost } from "./client";
 
 export const EvaluationAPI = {
   criterios: () => apiGet("/evaluation/criterios/"),

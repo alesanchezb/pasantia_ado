@@ -75,7 +75,7 @@ export default function EvaluatorDashboard() {
                   <p className="text-sm text-gray-500">{app.department || "Sin departamento"}</p>
                 </div>
                 <Link
-                  to={`/evaluation/${app.id}`}
+                  to={`/evaluation/${app.user_id}`}
                   className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 font-medium text-sm"
                 >
                   Evaluar

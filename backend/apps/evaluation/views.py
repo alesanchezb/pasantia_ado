@@ -6,7 +6,12 @@ from django.db import transaction
 from django.shortcuts import get_object_or_404
 from .models import Evaluation, EvaluationScore
 from .serializers import EvaluationSerializer
+from apps.profiles.models import Evidence
+from apps.profiles.serializers import EvidenceSerializer
+from django.utils.decorators import method_decorator
+from django.views.decorators.csrf import csrf_exempt
 
+@method_decorator(csrf_exempt, name='dispatch')
 class SaveEvaluationView(APIView):
     permission_classes = [IsAuthenticated]
 
@@ -47,6 +52,24 @@ class GetEvaluationView(generics.RetrieveAPIView):
     permission_classes = [IsAuthenticated]
     serializer_class = EvaluationSerializer
 
-    def get_object(self):
-        applicant_id = self.kwargs.get('applicant_id')
-        return get_object_or_404(Evaluation, evaluator=self.request.user, applicant_id=applicant_id)
+    def get(self, request, applicant_id):
+        evaluation = Evaluation.objects.filter(evaluator=request.user, applicant_id=applicant_id).first()
+        
+        # Obtener evidencias del postulante
+        evidences = Evidence.objects.filter(profile__user_id=applicant_id)
+        evidences_data = EvidenceSerializer(evidences, many=True).data
+
+        # Serializar evaluación si existe
+        if evaluation:
+            evaluation_data = self.get_serializer(evaluation).data
+        else:
+            evaluation_data = {
+                "status": Evaluation.STATUS_DRAFT,
+                "scores": []
+            }
+        
+        # Combinar respuesta
+        return Response({
+            **evaluation_data,
+            "evidences": evidences_data
+        })

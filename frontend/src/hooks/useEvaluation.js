@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { EvaluationAPI } from "../api/evaluation.api";
 // import { buildEvaluationStructure } from "../utils/evaluation.mapper"; // <-- YA NO LO NECESITAS
 
-export function useEvaluation() {
+export function useEvaluation(applicantId) {
   const [data, setData] = useState(null); // Estructura de criterios (CSV)
   const [savedScores, setSavedScores] = useState({}); // Puntajes guardados del backend
+  const [evidences, setEvidences] = useState([]); // Evidencias del postulante
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // TODO: Obtener el ID del postulante real. Por ahora hardcodeado o pasado como prop.
-  const APPLICANT_ID = 1; 
+  // ID del postulante viene por argumento
+  const APPLICANT_ID = applicantId; 
 
   useEffect(() => {
     const loadEvaluation = async () => {
@@ -32,13 +33,18 @@ export function useEvaluation() {
 
         setData(criteriosRes);
         
-        if (evaluationRes && evaluationRes.scores) {
-          // Convertimos el array de scores [{unique_key, value}] a objeto {key: value}
-          const scoreMap = {};
-          evaluationRes.scores.forEach(s => {
-            scoreMap[s.unique_key] = s.value;
-          });
-          setSavedScores(scoreMap);
+        if (evaluationRes) {
+          if (evaluationRes.scores) {
+            // Convertimos el array de scores [{unique_key, value}] a objeto {key: value}
+            const scoreMap = {};
+            evaluationRes.scores.forEach(s => {
+              scoreMap[s.unique_key] = s.value;
+            });
+            setSavedScores(scoreMap);
+          }
+          if (evaluationRes.evidences) {
+            setEvidences(evaluationRes.evidences);
+          }
         }
 
       } catch (err) {
@@ -50,7 +56,7 @@ export function useEvaluation() {
     };
 
     loadEvaluation();
-  }, []);
+  }, [applicantId]);
 
   const saveEvaluation = async (scores, status = "DRAFT") => {
     try {
@@ -71,6 +77,7 @@ export function useEvaluation() {
   return {
     data, 
     savedScores, // Exponemos los puntajes guardados
+    evidences, // Exponemos las evidencias
     saveEvaluation, // Exponemos la función de guardar
     loading,
     error,

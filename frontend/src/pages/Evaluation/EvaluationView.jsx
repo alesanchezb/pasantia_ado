@@ -1,15 +1,5 @@
 import React, { useState, useMemo } from 'react';
 
-// --- MOCK DATA PARA EVIDENCIAS ---
-const MOCK_APPLICANT_EVIDENCES = {
-  "grado_licenciatura": [
-    { id: 101, name: "Titulo_Licenciatura_UNISON.pdf", url: "#", source: "PORTAL", reviewed_by: "Dr. Roberto", reviewed_at: "2023-11-01" }
-  ],
-  "experiencia_docencia": [
-    { id: 102, name: "Constancia_Semestre_2022_2.pdf", url: "#", source: "UPLOAD", reviewed_by: "Dra. Ana L.", reviewed_at: "2023-11-02" },
-    { id: 103, name: "Constancia_Semestre_2023_1.pdf", url: "#", source: "UPLOAD", reviewed_by: null, reviewed_at: null }
-  ]
-};
 
 const SECTION_HEADERS = {
   "I.":  { A: "En Matemáticas", B: "En Área Afín", C: "-" },
@@ -19,9 +9,10 @@ const SECTION_HEADERS = {
 // ==========================================
 // COMPONENTE: VISOR DE EVIDENCIAS
 // ==========================================
-const EvidenceViewer = ({ evidenceKind }) => {
+const EvidenceViewer = ({ evidenceKind, evidences = [] }) => {
   if (!evidenceKind) return null;
-  const files = MOCK_APPLICANT_EVIDENCES[evidenceKind] || [];
+  // Filtrar evidencias por kind
+  const files = evidences.filter(e => e.kind === evidenceKind);
   if (files.length === 0) return null;
 
   return (
@@ -36,7 +27,7 @@ const EvidenceViewer = ({ evidenceKind }) => {
               <span title={isPortal ? "Documento del Portal" : "Subido por usuario"} className="text-base leading-none">
                 {isPortal ? "🏛️" : "☁️"} 
               </span>
-              <a href={file.url} target="_blank" rel="noreferrer" className="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline truncate">
+              <a href={file.file_url || file.url} target="_blank" rel="noreferrer" className="text-xs font-semibold text-blue-600 hover:text-blue-800 hover:underline truncate">
                 {file.name}
               </a>
             </div>
@@ -66,7 +57,7 @@ const EvidenceViewer = ({ evidenceKind }) => {
 // ==========================================
 // COMPONENTE PRINCIPAL DE EVALUACIÓN
 // ==========================================
-export default function EvaluationView({ evaluationData, savedScores = {}, onSave }) {
+export default function EvaluationView({ evaluationData, savedScores = {}, applicantEvidences = [], onSave }) {
   const [valores, setValores] = useState(savedScores);
 
   // Actualizar valores si llegan nuevos savedScores (ej. carga asíncrona)
@@ -76,13 +67,14 @@ export default function EvaluationView({ evaluationData, savedScores = {}, onSav
     }
   }, [savedScores]);
 
-  const handleSave = async () => {
+  const handleSave = async (status = "DRAFT") => {
     if (onSave) {
         try {
-            await onSave(valores, "COMPLETED");
-            alert("Evaluación guardada correctamente");
+            await onSave(valores, status);
+            alert(status === "COMPLETED" ? "Evaluación finalizada correctamente" : "Borrador guardado correctamente");
         } catch (error) {
-            alert("Error al guardar la evaluación");
+            console.error(error);
+            alert(`Error al guardar: ${error.message || error}`);
         }
     }
   };
@@ -237,7 +229,7 @@ export default function EvaluationView({ evaluationData, savedScores = {}, onSav
                                 {/* AHORA TAMBIÉN RENDERIZAMOS EVIDENCIAS AQUÍ */}
                                 {item.evidence_kind && (
                                   <div className="mt-1">
-                                    <EvidenceViewer evidenceKind={item.evidence_kind} />
+                                    <EvidenceViewer evidenceKind={item.evidence_kind} evidences={applicantEvidences} />
                                   </div>
                                 )}
                               </td>
@@ -261,7 +253,7 @@ export default function EvaluationView({ evaluationData, savedScores = {}, onSav
                                  <span className="text-sm font-medium text-slate-700 leading-snug">{item.concepto}</span>
                                  
                                  {item.evidence_kind && (
-                                    <EvidenceViewer evidenceKind={item.evidence_kind} />
+                                    <EvidenceViewer evidenceKind={item.evidence_kind} evidences={applicantEvidences} />
                                  )}
                               </div>
                             </td>
@@ -307,15 +299,22 @@ export default function EvaluationView({ evaluationData, savedScores = {}, onSav
                  <div className="text-right">
                     <div className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Puntuación Total</div>
                     {/* CORRECCIÓN 2: Texto de color sólido (blue-700) para asegurar que se vea */}
-                    <div className="text-3xl font-black text-blue-700 leading-none">
+                     <div className="text-3xl font-black text-blue-700 leading-none">
                         {seccionesCalculadas.reduce((acc, sec) => acc + Math.min(sec.totalSeccion, sec.max_puntos), 0).toFixed(2)}
                     </div>
                  </div>
-                 <button 
-                     onClick={handleSave}
-                     className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg shadow-blue-600/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
-                    Finalizar Evaluación
-                 </button>
+                 <div className="flex gap-2">
+                    <button 
+                        onClick={() => handleSave("DRAFT")}
+                        className="bg-white hover:bg-slate-50 text-slate-700 font-bold py-3 px-6 rounded-lg border border-slate-300 shadow-sm transition-all hover:-translate-y-0.5 active:translate-y-0">
+                        Guardar Borrador
+                    </button>
+                    <button 
+                        onClick={() => handleSave("COMPLETED")}
+                        className="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg shadow-lg shadow-blue-600/30 transition-all hover:-translate-y-0.5 active:translate-y-0">
+                        Finalizar Evaluación
+                    </button>
+                 </div>
              </div>
           </div>
       </div>
