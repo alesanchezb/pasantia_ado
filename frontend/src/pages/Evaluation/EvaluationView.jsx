@@ -57,7 +57,7 @@ const EvidenceViewer = ({ evidenceKind, evidences = [] }) => {
 // ==========================================
 // COMPONENTE PRINCIPAL DE EVALUACIÓN
 // ==========================================
-export default function EvaluationView({ evaluationData, savedScores = {}, applicantEvidences = [], onSave }) {
+export default function EvaluationView({ evaluationData, savedScores = {}, applicantEvidences = [], contestTitle, onSave }) {
   const [valores, setValores] = useState(savedScores);
 
   // Actualizar valores si llegan nuevos savedScores (ej. carga asíncrona)
@@ -156,7 +156,9 @@ export default function EvaluationView({ evaluationData, savedScores = {}, appli
           <div className="max-w-7xl mx-auto px-6 py-5 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
             <div>
               <h1 className="text-2xl font-bold text-slate-800">Evaluación Curricular</h1>
-              <p className="text-slate-500 text-sm mt-1">Universidad de Sonora • Campus Hermosillo</p>
+              <p className="text-slate-500 text-sm mt-1">
+                {contestTitle ? <span className="font-semibold text-blue-600">{contestTitle}</span> : "Universidad de Sonora • Campus Hermosillo"}
+              </p>
             </div>
           </div>
       </div>

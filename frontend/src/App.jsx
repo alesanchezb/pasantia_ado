@@ -10,6 +10,7 @@ import ApplicantDocumentsPage from "./pages/Applicant/ApplicantDocumentsPage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import EvaluatorDashboard from "./pages/Evaluator/EvaluatorDashboard";
+import AdminDashboard from "./pages/Admin/AdminDashboard";
 
 import "./index.css";
 
@@ -32,6 +33,7 @@ export default function App() {
 
           {/* evaluator */}
           <Route path={ROUTES.EVALUATOR_DASHBOARD} element={<EvaluatorDashboard />} />
+          <Route path={ROUTES.ADMIN_DASHBOARD} element={<AdminDashboard />} />
 
           {/* evaluation */}
           <Route path={ROUTES.EVALUATION} element={<EvaluationPage />} />

@@ -1,6 +1,34 @@
 from django.db import models
 from django.conf import settings
 
+class Contest(models.Model):
+    title = models.CharField(max_length=255)
+    description = models.TextField(blank=True, default="")
+    created_at = models.DateTimeField(auto_now_add=True)
+    active = models.BooleanField(default=True)
+    
+    # Evaluadores asignados a este concurso
+    evaluators = models.ManyToManyField(
+        settings.AUTH_USER_MODEL,
+        related_name='contests_evaluated',
+        blank=True
+    )
+
+    def __str__(self):
+        return self.title
+
+
+class Application(models.Model):
+    contest = models.ForeignKey(Contest, on_delete=models.CASCADE, related_name='applications')
+    applicant = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name='applications')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        unique_together = ('contest', 'applicant')
+
+    def __str__(self):
+        return f"{self.applicant} - {self.contest}"
+
 class Evaluation(models.Model):
     STATUS_DRAFT = 'DRAFT'
     STATUS_COMPLETED = 'COMPLETED'
@@ -19,6 +47,13 @@ class Evaluation(models.Model):
         on_delete=models.CASCADE,
         related_name='evaluations_received'
     )
+    contest = models.ForeignKey(
+        Contest,
+        on_delete=models.CASCADE,
+        related_name='evaluations',
+        null=True, 
+        blank=True 
+    )
     status = models.CharField(
         max_length=20,
         choices=STATUS_CHOICES,
@@ -28,7 +63,7 @@ class Evaluation(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
 
     class Meta:
-        unique_together = ('evaluator', 'applicant')
+        unique_together = ('evaluator', 'applicant', 'contest')
 
     def __str__(self):
         return f"Evaluación de {self.evaluator} a {self.applicant}"

@@ -22,6 +22,8 @@ export default function LoginPage() {
       
       if (user.role === "EVALUATOR") {
         nav(ROUTES.EVALUATOR_DASHBOARD);
+      } else if (user.role === "ADMIN") {
+        nav(ROUTES.ADMIN_DASHBOARD);
       } else {
         nav(ROUTES.APPLICANT_DASHBOARD);
       }

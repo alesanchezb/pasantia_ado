@@ -2,10 +2,11 @@ import { useEffect, useState } from "react";
 import { EvaluationAPI } from "../api/evaluation.api";
 // import { buildEvaluationStructure } from "../utils/evaluation.mapper"; // <-- YA NO LO NECESITAS
 
-export function useEvaluation(applicantId) {
+export function useEvaluation(applicantId, contestId) {
   const [data, setData] = useState(null); // Estructura de criterios (CSV)
   const [savedScores, setSavedScores] = useState({}); // Puntajes guardados del backend
   const [evidences, setEvidences] = useState([]); // Evidencias del postulante
+  const [contestTitle, setContestTitle] = useState(""); // Título del concurso
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
@@ -21,7 +22,7 @@ export function useEvaluation(applicantId) {
         // Ejecutamos ambas peticiones en paralelo
         const [criteriosRes, evaluationRes] = await Promise.all([
           EvaluationAPI.criterios(),
-          EvaluationAPI.get(APPLICANT_ID).catch(err => {
+          EvaluationAPI.get(APPLICANT_ID, contestId).catch(err => {
             // Si da sub-404 es que no existe, no es problema crítico
             console.warn("No hay evaluación previa o error al cargar:", err);
             return null;
@@ -45,6 +46,9 @@ export function useEvaluation(applicantId) {
           if (evaluationRes.evidences) {
             setEvidences(evaluationRes.evidences);
           }
+          if (evaluationRes.contest_title) {
+            setContestTitle(evaluationRes.contest_title);
+          }
         }
 
       } catch (err) {
@@ -56,13 +60,14 @@ export function useEvaluation(applicantId) {
     };
 
     loadEvaluation();
-  }, [applicantId]);
+  }, [applicantId, contestId]);
 
   const saveEvaluation = async (scores, status = "DRAFT") => {
     try {
       const payload = {
         applicant_id: APPLICANT_ID,
         status: status,
+        contest_id: contestId,
         scores: scores
       };
       const response = await EvaluationAPI.save(payload);
@@ -78,6 +83,7 @@ export function useEvaluation(applicantId) {
     data, 
     savedScores, // Exponemos los puntajes guardados
     evidences, // Exponemos las evidencias
+    contestTitle, // Exponemos el título del concurso
     saveEvaluation, // Exponemos la función de guardar
     loading,
     error,

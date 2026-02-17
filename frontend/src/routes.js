@@ -8,5 +8,8 @@ export const ROUTES = {
   APPLICANT_EVIDENCES: "/applicant/evidences",
   
   EVALUATOR_DASHBOARD: "/evaluator",
+  EVALUATOR_DASHBOARD: "/evaluator",
   EVALUATION: "/evaluation/:id",
+  
+  ADMIN_DASHBOARD: "/admin-panel",
 };
