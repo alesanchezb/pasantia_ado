@@ -1,65 +1,45 @@
 import { createContext, useContext, useState, useEffect } from "react";
 import { AuthAPI } from "../api/auth.api";
+import { ProfileAPI } from "../api/profile.api";
 
 const AuthContext = createContext(null);
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
-  const [token, setToken] = useState(() => localStorage.getItem("authToken"));
+  const [loading, setLoading] = useState(true); // true mientras verifica la sesión inicial
 
+  // Al cargar la app, intentamos recuperar el perfil del usuario desde la sesión activa
   useEffect(() => {
-    // Al cargar la app, si tenemos un token, intentamos recuperar los datos del usuario
-    // desde localStorage. En una app real, aquí se podría llamar a un endpoint /api/users/me.
-    const storedUser = localStorage.getItem("user");
-    if (storedUser && token) {
-      try {
-        setUser(JSON.parse(storedUser));
-      } catch (e) {
-        console.error("Fallo al parsear el usuario desde localStorage", e);
-        // Limpiamos el estado si los datos están corruptos
-        localStorage.removeItem("user");
-        localStorage.removeItem("authToken");
-        setToken(null);
-      }
-    }
-  }, [token]);
+    ProfileAPI.me()
+      .then((profile) => setUser(profile))
+      .catch(() => setUser(null)) // 401 = no hay sesión, simplemente null
+      .finally(() => setLoading(false));
+  }, []);
 
   const login = async (username, password) => {
-    // 1. Get CSRF token
+    // 1. Obtener token CSRF
     await AuthAPI.csrf();
-    
-    // 2. Login
+    // 2. Iniciar sesión (el backend fija la cookie de sesión)
     await AuthAPI.login(username, password);
-    
-    // 3. Get user profile to know the role
-    // We can't get the user directly from login response anymore with standard session auth,
-    // so we fetch 'me' endpoint.
-    const { ProfileAPI } = await import("../api/profile.api");
+    // 3. Obtener perfil para conocer el rol
     const userProfile = await ProfileAPI.me();
-    
-    // 4. Store session data
-    // For session auth, we don't strictly need a token in localStorage, 
-    // but we use it to mark "isAuthenticated".
-    // We'll store a dummy token or just the user object.
-    const dummyToken = "session_active";
-    localStorage.setItem("authToken", dummyToken);
-    localStorage.setItem("user", JSON.stringify(userProfile));
-    
-    setToken(dummyToken);
     setUser(userProfile);
     return userProfile;
   };
 
-  const logout = () => {
-    localStorage.removeItem("authToken");
-    localStorage.removeItem("user");
+  const logout = async () => {
+    await AuthAPI.logout();
     setUser(null);
-    setToken(null);
-    // Opcional: redirigir al login
-    window.location.href = '/login';
+    window.location.href = "/login";
   };
 
-  const value = { user, token, login, logout, isAuthenticated: !!token };
+  const value = {
+    user,
+    loading,
+    login,
+    logout,
+    isAuthenticated: !!user,
+  };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }

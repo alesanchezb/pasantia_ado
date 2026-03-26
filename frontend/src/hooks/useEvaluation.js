@@ -1,48 +1,38 @@
 import { useEffect, useState } from "react";
 import { EvaluationAPI } from "../api/evaluation.api";
-// import { buildEvaluationStructure } from "../utils/evaluation.mapper"; // <-- YA NO LO NECESITAS
 
-export function useEvaluation() {
-  const [data, setData] = useState(null); // Estructura de criterios (CSV)
-  const [savedScores, setSavedScores] = useState({}); // Puntajes guardados del backend
+export function useEvaluation(applicantId) {
+  const [data, setData] = useState(null);
+  const [savedScores, setSavedScores] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // TODO: Obtener el ID del postulante real. Por ahora hardcodeado o pasado como prop.
-  const APPLICANT_ID = 1; 
-
   useEffect(() => {
+    if (!applicantId) return;
+
     const loadEvaluation = async () => {
       try {
         setLoading(true);
-        console.log("Pidiendo criterios y evaluación guardada...");
-        
-        // Ejecutamos ambas peticiones en paralelo
+
         const [criteriosRes, evaluationRes] = await Promise.all([
           EvaluationAPI.criterios(),
-          EvaluationAPI.get(APPLICANT_ID).catch(err => {
-            // Si da sub-404 es que no existe, no es problema crítico
+          EvaluationAPI.get(applicantId).catch((err) => {
             console.warn("No hay evaluación previa o error al cargar:", err);
             return null;
-          })
+          }),
         ]);
 
-        console.log("Criterios:", criteriosRes);
-        console.log("Evaluación previa:", evaluationRes);
-
         setData(criteriosRes);
-        
+
         if (evaluationRes && evaluationRes.scores) {
-          // Convertimos el array de scores [{unique_key, value}] a objeto {key: value}
           const scoreMap = {};
-          evaluationRes.scores.forEach(s => {
+          evaluationRes.scores.forEach((s) => {
             scoreMap[s.unique_key] = s.value;
           });
           setSavedScores(scoreMap);
         }
-
       } catch (err) {
-        console.error("❌ Error cargando evaluación:", err);
+        console.error("Error cargando evaluación:", err);
         setError(err.message || "Error desconocido");
       } finally {
         setLoading(false);
@@ -50,28 +40,22 @@ export function useEvaluation() {
     };
 
     loadEvaluation();
-  }, []);
+  }, [applicantId]);
 
   const saveEvaluation = async (scores, status = "DRAFT") => {
-    try {
-      const payload = {
-        applicant_id: APPLICANT_ID,
-        status: status,
-        scores: scores
-      };
-      const response = await EvaluationAPI.save(payload);
-      console.log("Guardado exitoso:", response);
-      return response;
-    } catch (err) {
-      console.error("Error al guardar:", err);
-      throw err;
-    }
+    const payload = {
+      applicant_id: applicantId,
+      status,
+      scores,
+    };
+    const response = await EvaluationAPI.save(payload);
+    return response;
   };
 
   return {
-    data, 
-    savedScores, // Exponemos los puntajes guardados
-    saveEvaluation, // Exponemos la función de guardar
+    data,
+    savedScores,
+    saveEvaluation,
     loading,
     error,
   };

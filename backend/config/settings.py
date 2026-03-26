@@ -29,7 +29,6 @@ SECRET_KEY = 'django-insecure-8xaj(0in87#33b7e_t0hvzul+at2wp-**()83r+(wuc=lj&i8&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
 
 MEDIA_URL = "/media/"
 MEDIA_ROOT = BASE_DIR / "media"
@@ -47,7 +46,6 @@ INSTALLED_APPS = [
     # 3rd party
     'corsheaders',
     'rest_framework',
-    'rest_framework_simplejwt',
 
     # Local apps
     'apps.profiles',
@@ -145,7 +143,6 @@ CORS_ALLOW_CREDENTIALS = True
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 CSRF_TRUSTED_ORIGINS = [
     "http://localhost:5173",

@@ -1,7 +1,7 @@
-import { apiGet } from "./client";
+import { apiGet, apiPostJson } from "./client";
 
 export const EvaluationAPI = {
   criterios: () => apiGet("/evaluation/criterios/"),
-  save: (data) => apiPost("/evaluation/save/", data),
+  save: (data) => apiPostJson("/evaluation/save/", data),
   get: (applicantId) => apiGet(`/evaluation/get/${applicantId}/`),
 };

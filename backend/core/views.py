@@ -1,28 +1,31 @@
 import csv
 import re
-from django.http import JsonResponse
-from django.conf import settings
+import json
 from pathlib import Path
+from django.conf import settings
+from django.http import JsonResponse
+from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
+
 
 def criterios_evaluation(request):
     csv_path = Path(settings.BASE_DIR) / "static/evaluation/criterios.csv"
 
     data_estructurada = []
     seccion_actual = None
-    ultimo_item_padre = None 
+    ultimo_item_padre = None
 
-    regex_seccion = re.compile(r'^[IVX]+\.?$')      
+    regex_seccion = re.compile(r'^[IVX]+\.?$')
     regex_max_puntos = re.compile(r'max\.?\s*(\d+)', re.IGNORECASE)
 
     try:
         with open(csv_path, newline="", encoding="utf-8") as f:
             reader = csv.reader(f)
-            next(reader) # Omitir la fila de encabezado
+            next(reader)  # Omitir la fila de encabezado
 
             for row in reader:
-                # Normalizamos la fila para leer todas las columnas de forma segura
                 row = row + [""] * (14 - len(row))
-                
+
                 col_id = row[1].strip()
                 col_desc = row[2].strip()
 
@@ -32,13 +35,12 @@ def criterios_evaluation(request):
                    desc_lower.startswith("puntajes máximos") or \
                    desc_lower.startswith("puntuación total"):
                     continue
-                
+
                 # --- 1. DETECTAR SI ES UNA SECCIÓN PRINCIPAL (ej: "I.", "II.") ---
                 if regex_seccion.match(col_id):
                     match = regex_max_puntos.search(col_desc)
                     max_pts = int(match.group(1)) if match else 0
-                    
-                    # Creamos la nueva sección y la definimos como la sección activa
+
                     seccion_actual = {
                         "id": col_id,
                         "titulo": col_desc,
@@ -47,18 +49,15 @@ def criterios_evaluation(request):
                     }
                     data_estructurada.append(seccion_actual)
                     ultimo_item_padre = None
-                    continue # Hemos procesado la fila de sección, pasamos a la siguiente
+                    continue
 
-                # Si llegamos aquí, la fila NO es una sección principal.
-                # Debe ser un item o subtítulo que pertenece a la sección que ya encontramos.
                 if seccion_actual is None:
-                    continue # Ignoramos filas de items que aparezcan antes de la primera sección
+                    continue
 
                 # --- 2. PROCESAR LA FILA COMO UN ITEM ---
                 if not col_desc:
-                    continue # Ignoramos filas sin descripción, no son items válidos
+                    continue
 
-                # Mapeo de columnas de inputs (A, B, C)
                 inputs_detectados = []
                 mapa_columnas = [(3, "col_A"), (4, "col_B"), (5, "col_C")]
                 if seccion_actual["id"] == "I.":
@@ -72,7 +71,6 @@ def criterios_evaluation(request):
                     except (ValueError, IndexError):
                         pass
 
-                # Determinamos el tipo de item (subtitulo, subitem, o item normal)
                 tipo = "item"
                 final_id = col_id
                 if col_id and not inputs_detectados:
@@ -84,13 +82,11 @@ def criterios_evaluation(request):
                         final_id = f"{ultimo_item_padre}_sub_{len(seccion_actual['items'])}"
                     else:
                         tipo = "item"
-                        # ¡AQUÍ ESTÁ LA MAGIA! Si no tiene ID ni padre, le inventamos uno único:
                         final_id = f"autoid_{len(seccion_actual['items'])}"
                 elif not col_id and inputs_detectados and ultimo_item_padre:
                     tipo = "subitem"
                     final_id = f"{ultimo_item_padre}_sub_{len(seccion_actual['items'])}"
 
-                # Leemos los metadatos de las últimas columnas
                 input_type = "number" if row[12].strip().lower() == "number" else "radio"
                 evidence_kind = row[13].strip() or None
 
@@ -102,47 +98,10 @@ def criterios_evaluation(request):
                     "input_type": input_type,
                     "evidence_kind": evidence_kind,
                 }
-                
-                # Añadimos el item a la sección actual
+
                 seccion_actual["items"].append(item)
 
     except Exception as e:
         return JsonResponse({"error": f"Error procesando el CSV: {str(e)}"}, status=500)
 
     return JsonResponse(data_estructurada, safe=False)
-
-
-import json
-from django.http import JsonResponse
-from django.views.decorators.http import require_http_methods
-from django.views.decorators.csrf import csrf_exempt
-from django.contrib.auth import authenticate, login, logout
-
-
-@csrf_exempt
-@require_http_methods(["POST"])
-def login_view(request):
-    try:
-        data = json.loads(request.body.decode("utf-8") or "{}")
-    except Exception:
-        return JsonResponse({"detail": "Invalid JSON"}, status=400)
-
-    username = data.get("username")
-    password = data.get("password")
-
-    if not username or not password:
-        return JsonResponse({"detail": "username and password required"}, status=400)
-
-    user = authenticate(request, username=username, password=password)
-    if user is None:
-        return JsonResponse({"detail": "Invalid credentials"}, status=401)
-
-    login(request, user)
-    return JsonResponse({"ok": True})
-
-
-@csrf_exempt
-@require_http_methods(["POST"])
-def logout_view(request):
-    logout(request)
-    return JsonResponse({"ok": True})
