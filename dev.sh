@@ -32,10 +32,10 @@ else
 fi
 
 # Run migrations to be safe
-python manage.py migrate
+python3 manage.py migrate
 
 # Run server in background
-python manage.py runserver &
+python3 manage.py runserver &
 BACKEND_PID=$!
 cd ..
 
